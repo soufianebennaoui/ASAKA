@@ -229,14 +229,33 @@ const HomePage = ({ navigate }) => {
             </a>
           </div>
 
-          {/* Map placeholder */}
-          <div className="h-64 md:h-80 bg-obsidian-800 rounded-3xl border border-obsidian-700/60 flex items-center justify-center overflow-hidden relative">
-            <div className="absolute inset-0 bg-gradient-to-br from-salmon-500/5 to-sea-blue-500/5" />
-            <div className="text-center relative z-10">
-              <span className="text-5xl">🗺️</span>
-              <p className="text-champagne-muted text-sm mt-3 font-sans">Sidi Maarouf, Casablanca</p>
-            </div>
+          {/* Embedded Map */}
+          <div className="h-64 md:h-80 rounded-3xl overflow-hidden border border-obsidian-700/60 relative group">
+            <iframe
+              title="Asaka Sushi — Localisation"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d26320!2d-7.6445486!3d33.5216462!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xda62d43d3c22be7:0x477d98f3e452102a!2sSalmon+sushi+Casablanca!5e0!3m2!1sfr!2sma!4v1"
+              width="100%"
+              height="100%"
+              style={{ border: 0, filter: 'grayscale(20%) contrast(1.05)' }}
+              allowFullScreen=""
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
+            {/* Overlay button to open in maps app */}
+            <a
+              href="https://maps.app.goo.gl/7S9m3er7m5KswGbD8"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="absolute bottom-4 right-4 bg-obsidian-950/90 backdrop-blur-md text-champagne
+                text-xs font-bold px-4 py-2 rounded-xl border border-obsidian-700/60
+                hover:border-salmon-500/50 hover:text-salmon-500 transition-all
+                opacity-0 group-hover:opacity-100 duration-200"
+            >
+              Ouvrir dans Maps →
+            </a>
           </div>
+
+
         </div>
       </section>
 
