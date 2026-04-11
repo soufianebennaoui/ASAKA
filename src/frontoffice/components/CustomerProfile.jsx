@@ -42,7 +42,7 @@ export const Avatar = ({ customer, size = 'md', className = '' }) => {
     xl: 'w-16 h-16 text-3xl rounded-2xl',
   };
   const cls = `${sizes[size] || sizes.md} flex items-center justify-center overflow-hidden
-    flex-shrink-0 bg-gradient-to-br from-asaka-700 to-asaka-500 ${className}`;
+    flex-shrink-0 bg-gradient-to-br from-obsidian-700 to-salmon-500 ${className}`;
 
   if (display?.type === 'img') {
     return (
@@ -85,36 +85,36 @@ const MiniCountrySelector = ({ selected, onChange }) => {
       <button type="button"
         onClick={() => { setOpen(o => !o); setQuery(''); }}
         className="flex items-center gap-1.5 h-full px-3 py-2.5 rounded-l-xl
-          border border-r-0 border-asaka-700/50 bg-asaka-700/40 hover:bg-asaka-700/60
+          border border-r-0 border-obsidian-700/50 bg-obsidian-700/40 hover:bg-obsidian-700/60
           text-white transition-all min-w-[84px]">
         <span className="text-base leading-none">{selected.flag}</span>
-        <span className="text-sm font-bold text-asaka-300">{selected.dial}</span>
+        <span className="text-sm font-bold text-salmon-500">{selected.dial}</span>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
-          className={`w-3 h-3 text-asaka-600 transition-transform ${open ? 'rotate-180' : ''}`}>
+          className={`w-3 h-3 text-obsidian-400 transition-transform ${open ? 'rotate-180' : ''}`}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/>
         </svg>
       </button>
       {open && (
-        <div className="absolute bottom-full left-0 z-[200] mb-1 w-60 bg-asaka-800
-          border border-asaka-700/50 rounded-2xl shadow-2xl overflow-hidden">
-          <div className="p-2 border-b border-asaka-700/30">
+        <div className="absolute bottom-full left-0 z-[200] mb-1 w-60 bg-obsidian-800
+          border border-obsidian-700/50 rounded-2xl shadow-2xl overflow-hidden">
+          <div className="p-2 border-b border-obsidian-700/30">
             <input type="text" value={query} onChange={e => setQuery(e.target.value)}
               placeholder="Pays…"
-              className="w-full bg-asaka-900/60 border border-asaka-700/40 rounded-xl
-                px-3 py-1.5 text-white text-xs placeholder:text-asaka-700 outline-none
-                focus:border-asaka-500/60" autoFocus />
+              className="w-full bg-obsidian-900/60 border border-obsidian-700/40 rounded-xl
+                px-3 py-1.5 text-white text-xs placeholder:text-obsidian-400 outline-none
+                focus:border-salmon-500/60" autoFocus />
           </div>
           <div className="overflow-y-auto max-h-44">
             {filtered.map(c => (
               <button key={c.code} type="button"
                 onClick={() => { onChange(c); setOpen(false); setQuery(''); }}
                 className={`w-full flex items-center gap-3 px-4 py-2 text-left
-                  hover:bg-asaka-700/40 transition-colors text-xs ${
-                  selected.code === c.code ? 'bg-asaka-700/30' : ''
+                  hover:bg-obsidian-700/40 transition-colors text-xs ${
+                  selected.code === c.code ? 'bg-obsidian-700/30' : ''
                 }`}>
                 <span className="text-base w-5 text-center">{c.flag}</span>
-                <span className="flex-1 text-asaka-200 truncate">{c.name}</span>
-                <span className="text-asaka-500 font-bold flex-shrink-0">{c.dial}</span>
+                <span className="flex-1 text-champagne truncate">{c.name}</span>
+                <span className="text-salmon-500 font-bold flex-shrink-0">{c.dial}</span>
               </button>
             ))}
           </div>
@@ -186,23 +186,23 @@ const ChangeFieldModal = ({ field, current, onClose, onSave }) => {
 
   return (
     <>
-      <div className="fixed inset-0 bg-asaka-950/80 backdrop-blur-sm" style={{ zIndex: 45 }} onClick={onClose} />
+      <div className="fixed inset-0 bg-obsidian-950/80 backdrop-blur-sm" style={{ zIndex: 45 }} onClick={onClose} />
       <div
         ref={cfPanelRef}
-        className="fixed bottom-0 inset-x-0 max-w-lg mx-auto bg-asaka-800
-          border-t border-asaka-700/50 rounded-t-3xl px-6 pt-4
+        className="fixed bottom-0 inset-x-0 max-w-lg mx-auto bg-obsidian-800
+          border-t border-obsidian-700/50 rounded-t-3xl px-6 pt-4
           pb-20 sm:pb-8"
         style={{ zIndex: 60, animation: 'slideUp 0.3s cubic-bezier(.34,1.56,.64,1) both' }}
         {...cfPanelDrag}>
         <div className="flex justify-center mb-5" {...cfDragHandle}>
-          <div className="w-10 h-1.5 bg-asaka-500 rounded-full" />
+          <div className="w-10 h-1.5 bg-salmon-500 rounded-full" />
         </div>
 
         {step === 'input' && (
           <>
             <h3 className="text-white font-black text-lg mb-1">Modifier le {label}</h3>
-            <p className="text-asaka-500 text-sm mb-4">
-              Actuel : <span className="text-asaka-300">
+            <p className="text-salmon-500 text-sm mb-4">
+              Actuel : <span className="text-salmon-500">
                 {isPhone && current ? `${getCountryFromPhone(current).flag} ${formatPhoneDisplay(current)}` : (current || '—')}
               </span>
             </p>
@@ -210,30 +210,30 @@ const ChangeFieldModal = ({ field, current, onClose, onSave }) => {
             {/* Phone: country selector + number input */}
             {isPhone ? (
               <>
-                <div className="flex rounded-xl border border-asaka-700/50 mb-2 overflow-visible">
+                <div className="flex rounded-xl border border-obsidian-700/50 mb-2 overflow-visible">
                   <MiniCountrySelector selected={country} onChange={c => { setCountry(c); setErr(''); }} />
                   <input type="tel" value={newVal}
                     onChange={e => { setNewVal(e.target.value); setErr(''); }}
                     placeholder={country.code === 'MA' ? '06 77 88 99 66' : 'Numéro local'}
                     className="flex-1 bg-transparent px-3 py-2.5 text-white text-sm
-                      placeholder:text-asaka-700 outline-none min-w-0 rounded-r-xl"
+                      placeholder:text-obsidian-400 outline-none min-w-0 rounded-r-xl"
                     autoFocus />
                 </div>
                 {country.code === 'MA' && (
-                  <p className="text-asaka-700 text-[10px] mb-3">
+                  <p className="text-obsidian-400 text-[10px] mb-3">
                     Formats : 0677889966 · 00212677889966 · +212677889966
                   </p>
                 )}
 
                 {/* OTP delivery method */}
-                <p className="text-asaka-600 text-xs font-semibold mb-2">Recevoir le code via</p>
+                <p className="text-obsidian-400 text-xs font-semibold mb-2">Recevoir le code via</p>
                 <div className="flex gap-2 mb-4">
                   <button type="button" onClick={() => setOtpMethod('sms')}
                     className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl
                       text-sm font-bold border transition-all ${
                       otpMethod === 'sms'
-                        ? 'bg-asaka-500/20 border-asaka-500/50 text-asaka-300'
-                        : 'glass-light border-asaka-700/40 text-asaka-600 hover:text-asaka-400'
+                        ? 'bg-salmon-500/20 border-salmon-500/50 text-salmon-500'
+                        : 'glass-light border-obsidian-700/40 text-obsidian-400 hover:text-salmon-500'
                     }`}>
                     <span>📱</span> SMS
                   </button>
@@ -242,7 +242,7 @@ const ChangeFieldModal = ({ field, current, onClose, onSave }) => {
                       text-sm font-bold border transition-all ${
                       otpMethod === 'whatsapp'
                         ? 'bg-[#25d366]/15 border-[#25d366]/40 text-[#25d366]'
-                        : 'glass-light border-asaka-700/40 text-asaka-600 hover:text-asaka-400'
+                        : 'glass-light border-obsidian-700/40 text-obsidian-400 hover:text-salmon-500'
                     }`}>
                     <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor">
                       <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
@@ -264,7 +264,7 @@ const ChangeFieldModal = ({ field, current, onClose, onSave }) => {
                   onChange={e => { setNewVal(e.target.value); setErr(''); }}
                   placeholder="nouveau@email.com"
                   className="input-asaka mb-2" autoFocus />
-                <p className="text-asaka-600 text-xs mb-4">
+                <p className="text-obsidian-400 text-xs mb-4">
                   Un code de vérification sera envoyé à votre nouvelle adresse email.
                 </p>
               </>
@@ -273,7 +273,7 @@ const ChangeFieldModal = ({ field, current, onClose, onSave }) => {
             {err && <p className="text-red-400 text-xs mb-3 flex items-center gap-1"><span>⚠️</span> {err}</p>}
             <div className="flex gap-3">
               <button onClick={onClose}
-                className="flex-1 py-3 rounded-xl glass-light text-asaka-500 font-bold text-sm">
+                className="flex-1 py-3 rounded-xl glass-light text-salmon-500 font-bold text-sm">
                 Annuler
               </button>
               <button onClick={sendOtp}
@@ -287,13 +287,13 @@ const ChangeFieldModal = ({ field, current, onClose, onSave }) => {
         {step === 'otp' && (
           <>
             <h3 className="text-white font-black text-lg mb-1">Vérification</h3>
-            <p className="text-asaka-500 text-sm mb-1">
+            <p className="text-salmon-500 text-sm mb-1">
               Code envoyé via{' '}
               {isPhone && otpMethod === 'whatsapp'
                 ? <span className="text-[#25d366]">WhatsApp</span>
-                : <span className="text-asaka-300">SMS/Email</span>
+                : <span className="text-salmon-500">SMS/Email</span>
               }{' '}
-              à <span className="text-asaka-300">
+              à <span className="text-salmon-500">
                 {isPhone ? formatPhoneDisplay(fullPhone) : newVal}
               </span>
             </p>
@@ -312,7 +312,7 @@ const ChangeFieldModal = ({ field, current, onClose, onSave }) => {
             {err && <p className="text-red-400 text-xs mb-2">{err}</p>}
             <div className="flex gap-3 mt-2">
               <button onClick={() => setStep('input')}
-                className="flex-1 py-3 rounded-xl glass-light text-asaka-500 font-bold text-sm">
+                className="flex-1 py-3 rounded-xl glass-light text-salmon-500 font-bold text-sm">
                 Retour
               </button>
               <button onClick={verifyOtp}
@@ -362,26 +362,26 @@ const AvatarPickerSheet = ({ customer, onClose, onSave }) => {
 
   return (
     <>
-      <div className="fixed inset-0 bg-asaka-950/80 backdrop-blur-sm" style={{ zIndex: 45 }} onClick={onClose} />
+      <div className="fixed inset-0 bg-obsidian-950/80 backdrop-blur-sm" style={{ zIndex: 45 }} onClick={onClose} />
       <div
         ref={apPanelRef}
-        className="fixed bottom-0 inset-x-0 max-w-lg mx-auto bg-asaka-800
-          border-t border-asaka-700/50 rounded-t-3xl px-6 pt-4
+        className="fixed bottom-0 inset-x-0 max-w-lg mx-auto bg-obsidian-800
+          border-t border-obsidian-700/50 rounded-t-3xl px-6 pt-4
           pb-20 sm:pb-8"
         style={{ zIndex: 60, animation: 'slideUp 0.3s cubic-bezier(.34,1.56,.64,1) both' }}
         {...apPanelDrag}>
         <div className="flex justify-center mb-5" {...apDragHandle}>
-          <div className="w-10 h-1.5 bg-asaka-500 rounded-full" />
+          <div className="w-10 h-1.5 bg-salmon-500 rounded-full" />
         </div>
         <h3 className="text-white font-black text-lg text-center mb-1">Photo de profil</h3>
-        <p className="text-asaka-600 text-xs text-center mb-5">Choisissez un avatar ou ajoutez votre photo</p>
+        <p className="text-obsidian-400 text-xs text-center mb-5">Choisissez un avatar ou ajoutez votre photo</p>
 
         {/* Photo preview */}
         {preview && (
           <div className="flex justify-center mb-4">
             <div className="relative">
               <img src={preview} alt="preview"
-                className="w-20 h-20 rounded-2xl object-cover border-2 border-asaka-400 shadow-glow-blue" />
+                className="w-20 h-20 rounded-2xl object-cover border-2 border-salmon-500 shadow-glow-salmon" />
               <button onClick={() => setPreview(null)}
                 className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 rounded-full
                   flex items-center justify-center text-white text-xs font-bold">
@@ -396,8 +396,8 @@ const AvatarPickerSheet = ({ customer, onClose, onSave }) => {
           {/* Gallery */}
           <button onClick={() => galleryRef.current?.click()}
             className="flex-1 flex flex-col items-center gap-2 py-4 rounded-2xl
-              border border-asaka-700/40 bg-asaka-900/50 text-asaka-400
-              hover:border-asaka-500/50 hover:text-asaka-300 transition-all active:scale-[0.97]">
+              border border-obsidian-700/40 bg-obsidian-900/50 text-salmon-500
+              hover:border-salmon-500/50 hover:text-salmon-500 transition-all active:scale-[0.97]">
             <span className="text-2xl">🖼️</span>
             <span className="text-xs font-bold">Galerie</span>
           </button>
@@ -407,8 +407,8 @@ const AvatarPickerSheet = ({ customer, onClose, onSave }) => {
           {/* Camera */}
           <button onClick={() => cameraRef.current?.click()}
             className="flex-1 flex flex-col items-center gap-2 py-4 rounded-2xl
-              border border-asaka-700/40 bg-asaka-900/50 text-asaka-400
-              hover:border-asaka-500/50 hover:text-asaka-300 transition-all active:scale-[0.97]">
+              border border-obsidian-700/40 bg-obsidian-900/50 text-salmon-500
+              hover:border-salmon-500/50 hover:text-salmon-500 transition-all active:scale-[0.97]">
             <span className="text-2xl">📷</span>
             <span className="text-xs font-bold">Caméra</span>
           </button>
@@ -418,9 +418,9 @@ const AvatarPickerSheet = ({ customer, onClose, onSave }) => {
 
         {/* Divider */}
         <div className="flex items-center gap-3 mb-4">
-          <div className="flex-1 h-px bg-asaka-700/40" />
-          <span className="text-asaka-700 text-xs">ou choisir un avatar</span>
-          <div className="flex-1 h-px bg-asaka-700/40" />
+          <div className="flex-1 h-px bg-obsidian-700/40" />
+          <span className="text-obsidian-400 text-xs">ou choisir un avatar</span>
+          <div className="flex-1 h-px bg-obsidian-700/40" />
         </div>
 
         {/* Emoji avatars */}
@@ -430,8 +430,8 @@ const AvatarPickerSheet = ({ customer, onClose, onSave }) => {
               className={`w-14 h-14 rounded-2xl text-3xl flex items-center justify-center
                 border-2 transition-all active:scale-95 ${
                 selected === emoji && !preview
-                  ? 'border-asaka-400 bg-asaka-500/20 shadow-glow-blue scale-110'
-                  : 'border-asaka-700/40 bg-asaka-900 hover:border-asaka-600'
+                  ? 'border-salmon-500 bg-salmon-500/20 shadow-glow-salmon scale-110'
+                  : 'border-obsidian-700/40 bg-obsidian-900 hover:border-obsidian-600'
               }`}>
               {emoji}
             </button>
@@ -440,7 +440,7 @@ const AvatarPickerSheet = ({ customer, onClose, onSave }) => {
 
         <div className="flex gap-3">
           <button onClick={onClose}
-            className="flex-1 py-3 rounded-xl glass-light text-asaka-500 font-bold text-sm">
+            className="flex-1 py-3 rounded-xl glass-light text-salmon-500 font-bold text-sm">
             Annuler
           </button>
           <button onClick={handleSave}
@@ -606,59 +606,59 @@ const SettingsSheet = ({ customer, onClose, onChangeField, onGoogleConnect, onFa
 
   return (
     <>
-      <div className="fixed inset-0 bg-asaka-950/80 backdrop-blur-sm" style={{ zIndex: 45 }} onClick={onClose} />
+      <div className="fixed inset-0 bg-obsidian-950/80 backdrop-blur-sm" style={{ zIndex: 45 }} onClick={onClose} />
       <div
         ref={ssPanelRef}
-        className="fixed bottom-0 inset-x-0 max-w-lg mx-auto bg-asaka-800
-          border-t border-asaka-700/50 rounded-t-3xl px-5 pt-4 overflow-y-auto max-h-[85vh]
+        className="fixed bottom-0 inset-x-0 max-w-lg mx-auto bg-obsidian-800
+          border-t border-obsidian-700/50 rounded-t-3xl px-5 pt-4 overflow-y-auto max-h-[85vh]
           pb-20 sm:pb-8"
         style={{ zIndex: 60, animation: 'slideUp 0.3s cubic-bezier(.34,1.56,.64,1) both' }}
         {...ssPanelDrag}>
         <div className="flex justify-center mb-5" {...ssDragHandle}>
-          <div className="w-10 h-1.5 bg-asaka-500 rounded-full" />
+          <div className="w-10 h-1.5 bg-salmon-500 rounded-full" />
         </div>
-        <h3 className="text-asaka-300 font-black text-sm uppercase tracking-wider mb-4">Paramètres du compte</h3>
+        <h3 className="text-salmon-500 font-black text-sm uppercase tracking-wider mb-4">Paramètres du compte</h3>
 
         {/* Personal info */}
         <div className="space-y-1 mb-4">
-          <div className="flex items-center justify-between py-3 border-b border-asaka-700/30">
+          <div className="flex items-center justify-between py-3 border-b border-obsidian-700/30">
             <div>
-              <p className="text-asaka-600 text-xs">Nom</p>
-              <p className="text-asaka-200 text-sm font-semibold">{customer.name}</p>
+              <p className="text-obsidian-400 text-xs">Nom</p>
+              <p className="text-champagne text-sm font-semibold">{customer.name}</p>
             </div>
           </div>
-          <div className="flex items-center justify-between py-3 border-b border-asaka-700/30">
+          <div className="flex items-center justify-between py-3 border-b border-obsidian-700/30">
             <div>
-              <p className="text-asaka-600 text-xs">Email</p>
-              <p className="text-asaka-300 text-sm">{customer.email || '—'}</p>
+              <p className="text-obsidian-400 text-xs">Email</p>
+              <p className="text-salmon-500 text-sm">{customer.email || '—'}</p>
             </div>
             <button onClick={() => onChangeField('email')}
-              className="text-xs text-asaka-500 hover:text-asaka-300 border border-asaka-700/50
-                hover:border-asaka-500/50 px-3 py-1.5 rounded-lg transition-all">
+              className="text-xs text-salmon-500 hover:text-salmon-500 border border-obsidian-700/50
+                hover:border-salmon-500/50 px-3 py-1.5 rounded-lg transition-all">
               Modifier
             </button>
           </div>
-          <div className="flex items-center justify-between py-3 border-b border-asaka-700/30">
+          <div className="flex items-center justify-between py-3 border-b border-obsidian-700/30">
             <div>
-              <p className="text-asaka-600 text-xs">Téléphone</p>
-              <p className="text-asaka-300 text-sm">{phoneDisplay}</p>
+              <p className="text-obsidian-400 text-xs">Téléphone</p>
+              <p className="text-salmon-500 text-sm">{phoneDisplay}</p>
             </div>
             <button onClick={() => onChangeField('phone')}
-              className="text-xs text-asaka-500 hover:text-asaka-300 border border-asaka-700/50
-                hover:border-asaka-500/50 px-3 py-1.5 rounded-lg transition-all">
+              className="text-xs text-salmon-500 hover:text-salmon-500 border border-obsidian-700/50
+                hover:border-salmon-500/50 px-3 py-1.5 rounded-lg transition-all">
               Modifier
             </button>
           </div>
           {customer.joinedDate && (
             <div className="py-3">
-              <p className="text-asaka-600 text-xs">Membre depuis</p>
-              <p className="text-asaka-500 text-sm">{customer.joinedDate}</p>
+              <p className="text-obsidian-400 text-xs">Membre depuis</p>
+              <p className="text-salmon-500 text-sm">{customer.joinedDate}</p>
             </div>
           )}
         </div>
 
         {/* ── 2FA Security Section ─────────────────────────────── */}
-        <div className="rounded-2xl border border-asaka-700/40 bg-asaka-900/40 p-4 mb-4">
+        <div className="rounded-2xl border border-obsidian-700/40 bg-obsidian-900/40 p-4 mb-4">
           {/* Header row */}
           <div className="flex items-center justify-between mb-1">
             <div className="flex items-center gap-2">
@@ -668,7 +668,7 @@ const SettingsSheet = ({ customer, onClose, onChangeField, onGoogleConnect, onFa
             {/* Toggle switch */}
             <button type="button" onClick={toggle2FA}
               className={`relative w-11 h-6 rounded-full transition-colors duration-200 flex-shrink-0 ${
-                twoFaEnabled ? 'bg-asaka-500' : 'bg-asaka-700/60'
+                twoFaEnabled ? 'bg-salmon-500' : 'bg-obsidian-700/60'
               }`}>
               <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow
                 transition-transform duration-200 ${twoFaEnabled ? 'translate-x-5' : 'translate-x-0.5'}`} />
@@ -676,15 +676,15 @@ const SettingsSheet = ({ customer, onClose, onChangeField, onGoogleConnect, onFa
           </div>
 
           {/* Security benefit message */}
-          <p className="text-asaka-600 text-xs mb-3 leading-relaxed">
+          <p className="text-obsidian-400 text-xs mb-3 leading-relaxed">
             Protégez vos points, badges et coupons. Activez la 2FA pour sécuriser vos récompenses
             et ne plus jamais les perdre.
           </p>
 
           {/* Method selector — only shown when 2FA is on */}
           {twoFaEnabled && (
-            <div className="mt-3 pt-3 border-t border-asaka-700/30">
-              <p className="text-asaka-500 text-[11px] font-semibold uppercase tracking-wide mb-2">
+            <div className="mt-3 pt-3 border-t border-obsidian-700/30">
+              <p className="text-salmon-500 text-[11px] font-semibold uppercase tracking-wide mb-2">
                 Méthode de vérification
               </p>
               <div className="flex flex-col gap-2">
@@ -692,51 +692,51 @@ const SettingsSheet = ({ customer, onClose, onChangeField, onGoogleConnect, onFa
                 <button type="button" onClick={() => setMethod('sms')}
                   className={`flex items-center gap-3 px-4 py-3 rounded-xl border transition-all text-left ${
                     twoFaMethod === 'sms'
-                      ? 'border-asaka-500/60 bg-asaka-500/15 text-asaka-200'
-                      : 'border-asaka-700/40 text-asaka-600 hover:border-asaka-600/50'
+                      ? 'border-salmon-500/60 bg-salmon-500/15 text-champagne'
+                      : 'border-obsidian-700/40 text-obsidian-400 hover:border-obsidian-600/50'
                   }`}>
                   <span className="text-xl w-6 text-center">📱</span>
                   <div className="flex-1">
                     <p className="text-sm font-bold">SMS</p>
-                    <p className="text-[11px] text-asaka-600">Code envoyé par message texte</p>
+                    <p className="text-[11px] text-obsidian-400">Code envoyé par message texte</p>
                   </div>
-                  {twoFaMethod === 'sms' && <span className="text-asaka-400 text-sm">✓</span>}
+                  {twoFaMethod === 'sms' && <span className="text-salmon-500 text-sm">✓</span>}
                 </button>
 
                 {/* Email */}
                 <button type="button" onClick={() => setMethod('email')}
                   className={`flex items-center gap-3 px-4 py-3 rounded-xl border transition-all text-left ${
                     twoFaMethod === 'email'
-                      ? 'border-asaka-500/60 bg-asaka-500/15 text-asaka-200'
-                      : 'border-asaka-700/40 text-asaka-600 hover:border-asaka-600/50'
+                      ? 'border-salmon-500/60 bg-salmon-500/15 text-champagne'
+                      : 'border-obsidian-700/40 text-obsidian-400 hover:border-obsidian-600/50'
                   }`}>
                   <span className="text-xl w-6 text-center">📧</span>
                   <div className="flex-1">
                     <p className="text-sm font-bold">Email</p>
-                    <p className="text-[11px] text-asaka-600">Code envoyé à votre adresse email</p>
+                    <p className="text-[11px] text-obsidian-400">Code envoyé à votre adresse email</p>
                   </div>
-                  {twoFaMethod === 'email' && <span className="text-asaka-400 text-sm">✓</span>}
+                  {twoFaMethod === 'email' && <span className="text-salmon-500 text-sm">✓</span>}
                 </button>
 
                 {/* Authenticator App */}
                 <button type="button" onClick={() => setMethod('app')}
                   className={`flex items-center gap-3 px-4 py-3 rounded-xl border transition-all text-left ${
                     twoFaMethod === 'app'
-                      ? 'border-asaka-500/60 bg-asaka-500/15 text-asaka-200'
-                      : 'border-asaka-700/40 text-asaka-600 hover:border-asaka-600/50'
+                      ? 'border-salmon-500/60 bg-salmon-500/15 text-champagne'
+                      : 'border-obsidian-700/40 text-obsidian-400 hover:border-obsidian-600/50'
                   }`}>
                   <span className="text-xl w-6 text-center">🔑</span>
                   <div className="flex-1">
                     <p className="text-sm font-bold">Application d'authentification</p>
-                    <p className="text-[11px] text-asaka-600">Google Authenticator, Authy, etc.</p>
+                    <p className="text-[11px] text-obsidian-400">Google Authenticator, Authy, etc.</p>
                   </div>
-                  {twoFaMethod === 'app' && <span className="text-asaka-400 text-sm">✓</span>}
+                  {twoFaMethod === 'app' && <span className="text-salmon-500 text-sm">✓</span>}
                 </button>
               </div>
 
               {/* Contextual tip */}
               <div className="flex items-start gap-2 mt-3 px-3 py-2 rounded-xl
-                bg-asaka-700/20 border border-asaka-700/30 text-xs text-asaka-600">
+                bg-obsidian-700/20 border border-obsidian-700/30 text-xs text-obsidian-400">
                 <span className="flex-shrink-0 mt-0.5">💡</span>
                 <span>
                   {twoFaMethod === 'app'
@@ -753,13 +753,13 @@ const SettingsSheet = ({ customer, onClose, onChangeField, onGoogleConnect, onFa
         {/* ── Addresses Section ──────────────────────────── */}
         <div className="mb-4">
           <div className="flex items-center justify-between mb-3">
-            <p className="text-asaka-600 text-xs font-semibold uppercase tracking-wider">
+            <p className="text-obsidian-400 text-xs font-semibold uppercase tracking-wider">
               Mes adresses
             </p>
             {!showAddAddr && (
               <button onClick={() => setShowAddAddr(true)}
-                className="text-xs text-asaka-400 hover:text-asaka-200 border border-asaka-700/50
-                  hover:border-asaka-500/50 px-3 py-1.5 rounded-lg transition-all">
+                className="text-xs text-salmon-500 hover:text-champagne border border-obsidian-700/50
+                  hover:border-salmon-500/50 px-3 py-1.5 rounded-lg transition-all">
                 + Ajouter
               </button>
             )}
@@ -767,7 +767,7 @@ const SettingsSheet = ({ customer, onClose, onChangeField, onGoogleConnect, onFa
 
           {/* Existing addresses */}
           {savedAddresses.length === 0 && !showAddAddr && (
-            <p className="text-asaka-700 text-xs italic py-2">Aucune adresse enregistrée.</p>
+            <p className="text-obsidian-400 text-xs italic py-2">Aucune adresse enregistrée.</p>
           )}
           {savedAddresses.map((addr) => {
             const isPrimary = addr.id === primaryId;
@@ -776,10 +776,10 @@ const SettingsSheet = ({ customer, onClose, onChangeField, onGoogleConnect, onFa
               <div key={addr.id}
                 className={`rounded-2xl border mb-2 p-3.5 transition-all ${
                   isEditing
-                    ? 'border-asaka-400/50 bg-asaka-700/20'
+                    ? 'border-salmon-500/50 bg-obsidian-700/20'
                     : isPrimary
-                      ? 'border-asaka-500/40 bg-asaka-500/8'
-                      : 'border-asaka-700/30 bg-asaka-900/30'
+                      ? 'border-salmon-500/40 bg-salmon-500/8'
+                      : 'border-obsidian-700/30 bg-obsidian-900/30'
                 }`}>
 
                 {isEditing ? (
@@ -789,14 +789,14 @@ const SettingsSheet = ({ customer, onClose, onChangeField, onGoogleConnect, onFa
                       <span className="text-white font-bold text-sm">Modifier l'adresse</span>
                       <button onClick={cancelEditAddress}
                         className="w-7 h-7 rounded-lg glass-light flex items-center justify-center
-                          text-asaka-500 hover:text-white transition-colors text-lg leading-none">
+                          text-salmon-500 hover:text-white transition-colors text-lg leading-none">
                         ×
                       </button>
                     </div>
                     <div className="space-y-2.5">
                       <div>
-                        <label className="text-asaka-600 text-xs font-semibold mb-1 block">
-                          Nom <span className="text-asaka-700 font-normal">(ex: Maison, Bureau)</span>
+                        <label className="text-obsidian-400 text-xs font-semibold mb-1 block">
+                          Nom <span className="text-obsidian-400 font-normal">(ex: Maison, Bureau)</span>
                         </label>
                         <input type="text" value={editAddrName}
                           onChange={e => setEditAddrName(e.target.value)}
@@ -805,7 +805,7 @@ const SettingsSheet = ({ customer, onClose, onChangeField, onGoogleConnect, onFa
                           maxLength={40} autoFocus />
                       </div>
                       <div>
-                        <label className="text-asaka-600 text-xs font-semibold mb-1 block">
+                        <label className="text-obsidian-400 text-xs font-semibold mb-1 block">
                           Adresse
                         </label>
                         <textarea value={editAddrTyped}
@@ -814,7 +814,7 @@ const SettingsSheet = ({ customer, onClose, onChangeField, onGoogleConnect, onFa
                           className="input-asaka resize-none text-sm"
                           placeholder="Ex : 12 Rue Ibn Battouta, Agadir, 80000" />
                         {addr.gpsLink && (
-                          <p className="text-[10px] text-asaka-600 mt-1 flex items-center gap-1">
+                          <p className="text-[10px] text-obsidian-400 mt-1 flex items-center gap-1">
                             <span>📍</span>
                             <span>La position GPS reste liée — seul le texte est modifié.</span>
                           </p>
@@ -829,8 +829,8 @@ const SettingsSheet = ({ customer, onClose, onChangeField, onGoogleConnect, onFa
                         Mettre à jour
                       </button>
                       <button onClick={cancelEditAddress}
-                        className="px-4 py-2.5 rounded-xl bg-asaka-800/60 border border-asaka-700/40
-                          text-asaka-500 text-xs font-bold hover:text-asaka-300 transition-all">
+                        className="px-4 py-2.5 rounded-xl bg-obsidian-800/60 border border-obsidian-700/40
+                          text-salmon-500 text-xs font-bold hover:text-salmon-500 transition-all">
                         Annuler
                       </button>
                     </div>
@@ -845,7 +845,7 @@ const SettingsSheet = ({ customer, onClose, onChangeField, onGoogleConnect, onFa
                           <span className="text-white font-bold text-sm">{addr.name}</span>
                           {isPrimary && (
                             <span className="text-[10px] px-2 py-0.5 rounded-full font-black
-                              bg-asaka-500/25 text-asaka-300 border border-asaka-500/35">
+                              bg-salmon-500/25 text-salmon-500 border border-salmon-500/35">
                               ★ Principale
                             </span>
                           )}
@@ -856,7 +856,7 @@ const SettingsSheet = ({ customer, onClose, onChangeField, onGoogleConnect, onFa
                             </span>
                           )}
                         </div>
-                        <p className="text-asaka-400 text-xs leading-relaxed line-clamp-2">
+                        <p className="text-salmon-500 text-xs leading-relaxed line-clamp-2">
                           {addr.address}
                         </p>
                         {addr.gpsLink && (
@@ -867,19 +867,19 @@ const SettingsSheet = ({ customer, onClose, onChangeField, onGoogleConnect, onFa
                         )}
                       </div>
                     </div>
-                    <div className="flex gap-2 mt-2.5 pt-2.5 border-t border-asaka-700/20">
+                    <div className="flex gap-2 mt-2.5 pt-2.5 border-t border-obsidian-700/20">
                       {!isPrimary && (
                         <button onClick={() => handleSetPrimary(addr.id)}
                           className="flex-1 py-1.5 rounded-lg text-xs font-bold
-                            border border-asaka-600/35 bg-asaka-700/15 text-asaka-400
-                            hover:bg-asaka-600/25 hover:text-white transition-all">
+                            border border-obsidian-600/35 bg-obsidian-700/15 text-salmon-500
+                            hover:bg-obsidian-600/25 hover:text-white transition-all">
                           ★ Principale
                         </button>
                       )}
                       <button onClick={() => startEditAddress(addr)}
                         className="flex-1 py-1.5 rounded-lg text-xs font-bold
-                          border border-asaka-500/35 bg-asaka-500/10 text-asaka-300
-                          hover:bg-asaka-500/20 hover:text-white transition-all flex items-center
+                          border border-salmon-500/35 bg-salmon-500/10 text-salmon-500
+                          hover:bg-salmon-500/20 hover:text-white transition-all flex items-center
                           justify-center gap-1">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
                           className="w-3 h-3">
@@ -903,12 +903,12 @@ const SettingsSheet = ({ customer, onClose, onChangeField, onGoogleConnect, onFa
 
           {/* Add address inline form */}
           {showAddAddr && (
-            <div className="rounded-2xl border border-asaka-600/40 bg-asaka-800/50 p-4 mt-1">
+            <div className="rounded-2xl border border-obsidian-600/40 bg-obsidian-800/50 p-4 mt-1">
               <div className="flex items-center justify-between mb-3">
                 <span className="text-white font-bold text-sm">Nouvelle adresse</span>
                 <button onClick={resetAddForm}
                   className="w-7 h-7 rounded-lg glass-light flex items-center justify-center
-                    text-asaka-500 hover:text-white transition-colors text-lg leading-none">
+                    text-salmon-500 hover:text-white transition-colors text-lg leading-none">
                   ×
                 </button>
               </div>
@@ -916,8 +916,8 @@ const SettingsSheet = ({ customer, onClose, onChangeField, onGoogleConnect, onFa
               {/* Name field — visible once method chosen */}
               {addAddrMethod && (
                 <div className="mb-3">
-                  <label className="text-asaka-600 text-xs font-semibold mb-1 block">
-                    Nom <span className="text-asaka-700 font-normal">(ex : Maison, Bureau)</span>
+                  <label className="text-obsidian-400 text-xs font-semibold mb-1 block">
+                    Nom <span className="text-obsidian-400 font-normal">(ex : Maison, Bureau)</span>
                   </label>
                   <input type="text" value={addAddrName}
                     onChange={e => setAddAddrName(e.target.value)}
@@ -933,10 +933,10 @@ const SettingsSheet = ({ customer, onClose, onChangeField, onGoogleConnect, onFa
                 <div className="grid grid-cols-2 gap-2">
                   <button onClick={() => chooseAddrMethod('typed')}
                     className="flex flex-col items-center gap-1.5 py-4 rounded-xl
-                      border-2 border-asaka-700/50 bg-asaka-900/40
-                      hover:border-asaka-500/60 hover:bg-asaka-700/25 transition-all group">
+                      border-2 border-obsidian-700/50 bg-obsidian-900/40
+                      hover:border-salmon-500/60 hover:bg-obsidian-700/25 transition-all group">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"
-                      className="w-5 h-5 text-asaka-300 group-hover:text-white transition-colors">
+                      className="w-5 h-5 text-salmon-500 group-hover:text-white transition-colors">
                       <path strokeLinecap="round" strokeLinejoin="round"
                         d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125"/>
                     </svg>
@@ -944,10 +944,10 @@ const SettingsSheet = ({ customer, onClose, onChangeField, onGoogleConnect, onFa
                   </button>
                   <button onClick={() => chooseAddrMethod('gps')}
                     className="flex flex-col items-center gap-1.5 py-4 rounded-xl
-                      border-2 border-asaka-700/50 bg-asaka-900/40
-                      hover:border-asaka-500/60 hover:bg-asaka-700/25 transition-all group">
+                      border-2 border-obsidian-700/50 bg-obsidian-900/40
+                      hover:border-salmon-500/60 hover:bg-obsidian-700/25 transition-all group">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"
-                      className="w-5 h-5 text-asaka-300 group-hover:text-white transition-colors">
+                      className="w-5 h-5 text-salmon-500 group-hover:text-white transition-colors">
                       <path strokeLinecap="round" strokeLinejoin="round"
                         d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/>
                       <path strokeLinecap="round" strokeLinejoin="round"
@@ -961,12 +961,12 @@ const SettingsSheet = ({ customer, onClose, onChangeField, onGoogleConnect, onFa
               {/* Typed input */}
               {addAddrMethod === 'typed' && (
                 <div>
-                  <label className="text-asaka-600 text-xs font-semibold mb-1 block">Adresse</label>
+                  <label className="text-obsidian-400 text-xs font-semibold mb-1 block">Adresse</label>
                   <textarea value={addAddrTyped} onChange={e => setAddAddrTyped(e.target.value)}
                     placeholder="Ex : 12 Rue Ibn Battouta, Agadir, 80000"
                     rows={2} className="input-asaka resize-none text-sm" autoFocus/>
                   <button onClick={() => setAddAddrMethod(null)}
-                    className="mt-1 text-[10px] text-asaka-700 hover:text-asaka-400 transition-colors">
+                    className="mt-1 text-[10px] text-obsidian-400 hover:text-salmon-500 transition-colors">
                     ← Changer de méthode
                   </button>
                 </div>
@@ -976,16 +976,16 @@ const SettingsSheet = ({ customer, onClose, onChangeField, onGoogleConnect, onFa
               {addAddrMethod === 'gps' && (
                 <div className="space-y-2">
                   {addAddrGpsState === 'loading' && (
-                    <div className="rounded-xl border border-asaka-600/40 bg-asaka-900/50 p-4 text-center">
+                    <div className="rounded-xl border border-obsidian-600/40 bg-obsidian-900/50 p-4 text-center">
                       <div className="relative w-10 h-10 mx-auto mb-2">
-                        <svg className="animate-spin w-10 h-10 text-asaka-400" viewBox="0 0 24 24" fill="none">
+                        <svg className="animate-spin w-10 h-10 text-salmon-500" viewBox="0 0 24 24" fill="none">
                           <circle className="opacity-20" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3"/>
                           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
                         </svg>
                         <span className="absolute inset-0 flex items-center justify-center">📍</span>
                       </div>
                       <p className="text-white font-bold text-xs">Détection en cours…</p>
-                      <p className="text-asaka-500 text-[11px] mt-1">
+                      <p className="text-salmon-500 text-[11px] mt-1">
                         Veuillez patienter, cela peut prendre quelques secondes.
                       </p>
                     </div>
@@ -1002,13 +1002,13 @@ const SettingsSheet = ({ customer, onClose, onChangeField, onGoogleConnect, onFa
                       </p>
                       <div className="flex gap-2">
                         <button onClick={() => { setAddAddrGpsState('idle'); handleAddrGps(); }}
-                          className="flex-1 py-1.5 rounded-lg bg-asaka-700/30 text-asaka-300 text-xs font-bold
-                            border border-asaka-600/40 hover:bg-asaka-600/40 transition-all">
+                          className="flex-1 py-1.5 rounded-lg bg-obsidian-700/30 text-salmon-500 text-xs font-bold
+                            border border-obsidian-600/40 hover:bg-obsidian-600/40 transition-all">
                           Réessayer
                         </button>
                         <button onClick={() => setAddAddrMethod('typed')}
-                          className="flex-1 py-1.5 rounded-lg bg-asaka-800/60 text-asaka-500 text-xs font-bold
-                            border border-asaka-700/40 hover:text-asaka-300 transition-all">
+                          className="flex-1 py-1.5 rounded-lg bg-obsidian-800/60 text-salmon-500 text-xs font-bold
+                            border border-obsidian-700/40 hover:text-salmon-500 transition-all">
                           Saisir manuellement
                         </button>
                       </div>
@@ -1018,7 +1018,7 @@ const SettingsSheet = ({ customer, onClose, onChangeField, onGoogleConnect, onFa
                     <div className={`rounded-xl border p-3 transition-all ${
                       addAddrGpsApproved
                         ? 'border-green-600/45 bg-green-900/12'
-                        : 'border-asaka-600/40 bg-asaka-900/40'
+                        : 'border-obsidian-600/40 bg-obsidian-900/40'
                     }`}>
                       <div className="flex items-start gap-2 mb-2">
                         <span className="text-lg flex-shrink-0">{addAddrGpsApproved ? '✅' : '📍'}</span>
@@ -1026,7 +1026,7 @@ const SettingsSheet = ({ customer, onClose, onChangeField, onGoogleConnect, onFa
                           <p className="text-white font-bold text-xs mb-0.5">
                             {addAddrGpsApproved ? 'Position approuvée' : 'Position détectée'}
                           </p>
-                          <p className="text-asaka-400 text-[11px] leading-relaxed">
+                          <p className="text-salmon-500 text-[11px] leading-relaxed">
                             {addAddrGpsResult.display}
                           </p>
                         </div>
@@ -1034,19 +1034,19 @@ const SettingsSheet = ({ customer, onClose, onChangeField, onGoogleConnect, onFa
                       {!addAddrGpsApproved ? (
                         <div className="flex gap-2">
                           <button onClick={() => setAddAddrGpsApproved(true)}
-                            className="flex-1 py-2 rounded-lg bg-asaka-500/20 border border-asaka-500/40
-                              text-asaka-200 text-xs font-bold hover:bg-asaka-500/30 transition-all">
+                            className="flex-1 py-2 rounded-lg bg-salmon-500/20 border border-salmon-500/40
+                              text-champagne text-xs font-bold hover:bg-salmon-500/30 transition-all">
                             ✓ Approuver
                           </button>
                           <button onClick={resetAddForm}
-                            className="px-3 py-2 rounded-lg bg-asaka-800/60 border border-asaka-700/40
-                              text-asaka-500 text-xs font-bold hover:text-asaka-300 transition-all">
+                            className="px-3 py-2 rounded-lg bg-obsidian-800/60 border border-obsidian-700/40
+                              text-salmon-500 text-xs font-bold hover:text-salmon-500 transition-all">
                             Ignorer
                           </button>
                         </div>
                       ) : (
                         <button onClick={() => { setAddAddrGpsApproved(false); setAddAddrGpsState('idle'); setAddAddrGpsResult(null); }}
-                          className="text-[10px] text-asaka-700 hover:text-red-400 transition-colors">
+                          className="text-[10px] text-obsidian-400 hover:text-red-400 transition-colors">
                           Modifier la position
                         </button>
                       )}
@@ -1054,7 +1054,7 @@ const SettingsSheet = ({ customer, onClose, onChangeField, onGoogleConnect, onFa
                   )}
                   {addAddrGpsState !== 'loading' && (
                     <button onClick={() => setAddAddrMethod(null)}
-                      className="text-[10px] text-asaka-700 hover:text-asaka-400 transition-colors">
+                      className="text-[10px] text-obsidian-400 hover:text-salmon-500 transition-colors">
                       ← Changer de méthode
                     </button>
                   )}
@@ -1079,7 +1079,7 @@ const SettingsSheet = ({ customer, onClose, onChangeField, onGoogleConnect, onFa
 
         {/* Social logins */}
         <div className="space-y-2 mb-5">
-          <p className="text-asaka-600 text-xs font-semibold uppercase tracking-wider mb-2">
+          <p className="text-obsidian-400 text-xs font-semibold uppercase tracking-wider mb-2">
             Connexions sociales
           </p>
           {/* Google */}
@@ -1087,7 +1087,7 @@ const SettingsSheet = ({ customer, onClose, onChangeField, onGoogleConnect, onFa
             className={`w-full flex items-center gap-3 p-3.5 rounded-xl border transition-all ${
               customer.googleId
                 ? 'border-green-700/40 bg-green-900/15 text-green-400'
-                : 'border-asaka-700/40 bg-asaka-800/50 text-asaka-400 hover:border-asaka-600/50'
+                : 'border-obsidian-700/40 bg-obsidian-800/50 text-salmon-500 hover:border-obsidian-600/50'
             }`}>
             <svg viewBox="0 0 24 24" className="w-5 h-5 flex-shrink-0" fill="none">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -1109,7 +1109,7 @@ const SettingsSheet = ({ customer, onClose, onChangeField, onGoogleConnect, onFa
             className={`w-full flex items-center gap-3 p-3.5 rounded-xl border transition-all ${
               customer.facebookId
                 ? 'border-[#1877f2]/40 bg-[#1877f2]/10 text-[#1877f2]'
-                : 'border-asaka-700/40 bg-asaka-800/50 text-asaka-400 hover:border-asaka-600/50'
+                : 'border-obsidian-700/40 bg-obsidian-800/50 text-salmon-500 hover:border-obsidian-600/50'
             }`}>
             <svg viewBox="0 0 24 24" className="w-5 h-5 flex-shrink-0" fill="#1877F2">
               <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
@@ -1127,7 +1127,7 @@ const SettingsSheet = ({ customer, onClose, onChangeField, onGoogleConnect, onFa
         </div>
 
         <button onClick={onClose}
-          className="w-full py-3 rounded-xl glass-light text-asaka-500 font-bold text-sm">
+          className="w-full py-3 rounded-xl glass-light text-salmon-500 font-bold text-sm">
           Fermer
         </button>
       </div>
@@ -1160,31 +1160,31 @@ const ReviewSheet = ({ order, onClose, onSubmit }) => {
 
   return (
     <>
-      <div className="fixed inset-0 bg-asaka-950/80 backdrop-blur-sm" style={{ zIndex: 45 }} onClick={onClose} />
+      <div className="fixed inset-0 bg-obsidian-950/80 backdrop-blur-sm" style={{ zIndex: 45 }} onClick={onClose} />
       <div
         ref={rvPanelRef}
-        className="fixed bottom-0 inset-x-0 max-w-lg mx-auto bg-asaka-800
-          border-t border-asaka-700/50 rounded-t-3xl px-5 pt-4
+        className="fixed bottom-0 inset-x-0 max-w-lg mx-auto bg-obsidian-800
+          border-t border-obsidian-700/50 rounded-t-3xl px-5 pt-4
           pb-20 sm:pb-8"
         style={{ zIndex: 60, animation: 'slideUp 0.3s cubic-bezier(.34,1.56,.64,1) both' }}
         {...rvPanelDrag}>
         <div className="flex justify-center mb-5" {...rvDragHandle}>
-          <div className="w-10 h-1.5 bg-asaka-500 rounded-full" />
+          <div className="w-10 h-1.5 bg-salmon-500 rounded-full" />
         </div>
 
         {/* Order info */}
         <div className="flex items-center gap-3 mb-5">
-          <div className="w-10 h-10 rounded-xl bg-asaka-700 flex items-center justify-center text-lg">
+          <div className="w-10 h-10 rounded-xl bg-obsidian-700 flex items-center justify-center text-lg">
             {order.mode === 'delivery' ? '🛵' : '🥡'}
           </div>
           <div>
             <p className="text-white font-bold text-sm">{order.id}</p>
-            <p className="text-asaka-500 text-xs">{order.date} · {order.total} DH</p>
+            <p className="text-salmon-500 text-xs">{order.date} · {order.total} DH</p>
           </div>
         </div>
 
         {/* Star rating */}
-        <p className="text-asaka-400 text-xs font-semibold mb-2">Votre note *</p>
+        <p className="text-salmon-500 text-xs font-semibold mb-2">Votre note *</p>
         <div className="flex gap-2 mb-5">
           {[1,2,3,4,5].map(s => (
             <button key={s}
@@ -1200,7 +1200,7 @@ const ReviewSheet = ({ order, onClose, onSubmit }) => {
         </div>
 
         {/* Comment */}
-        <p className="text-asaka-400 text-xs font-semibold mb-2">Commentaire</p>
+        <p className="text-salmon-500 text-xs font-semibold mb-2">Commentaire</p>
         <textarea
           value={comment}
           onChange={e => setComment(e.target.value)}
@@ -1211,14 +1211,14 @@ const ReviewSheet = ({ order, onClose, onSubmit }) => {
         />
 
         {/* Photo upload */}
-        <p className="text-asaka-400 text-xs font-semibold mb-2">
+        <p className="text-salmon-500 text-xs font-semibold mb-2">
           Photos ({images.length}/3)
         </p>
         <div className="flex gap-2 mb-5">
           {/* Uploaded images previews */}
           {images.map((src, i) => (
             <div key={i} className="relative w-16 h-16">
-              <img src={src} alt="" className="w-full h-full object-cover rounded-xl border border-asaka-600/40" />
+              <img src={src} alt="" className="w-full h-full object-cover rounded-xl border border-obsidian-600/40" />
               <button onClick={() => setImages(prev => prev.filter((_, j) => j !== i))}
                 className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 rounded-full
                   flex items-center justify-center text-white text-xs font-bold leading-none">
@@ -1231,16 +1231,16 @@ const ReviewSheet = ({ order, onClose, onSubmit }) => {
           {images.length < 3 && (
             <>
               <button onClick={() => galleryRef.current?.click()}
-                className="w-16 h-16 rounded-xl border border-dashed border-asaka-600/50
-                  bg-asaka-900/50 flex flex-col items-center justify-center gap-1
-                  text-asaka-600 hover:border-asaka-500 transition-all">
+                className="w-16 h-16 rounded-xl border border-dashed border-obsidian-600/50
+                  bg-obsidian-900/50 flex flex-col items-center justify-center gap-1
+                  text-obsidian-400 hover:border-salmon-500 transition-all">
                 <span className="text-xl">🖼️</span>
                 <span className="text-[9px]">Galerie</span>
               </button>
               <button onClick={() => cameraRef.current?.click()}
-                className="w-16 h-16 rounded-xl border border-dashed border-asaka-600/50
-                  bg-asaka-900/50 flex flex-col items-center justify-center gap-1
-                  text-asaka-600 hover:border-asaka-500 transition-all">
+                className="w-16 h-16 rounded-xl border border-dashed border-obsidian-600/50
+                  bg-obsidian-900/50 flex flex-col items-center justify-center gap-1
+                  text-obsidian-400 hover:border-salmon-500 transition-all">
                 <span className="text-xl">📷</span>
                 <span className="text-[9px]">Caméra</span>
               </button>
@@ -1254,7 +1254,7 @@ const ReviewSheet = ({ order, onClose, onSubmit }) => {
 
         <div className="flex gap-3">
           <button onClick={onClose}
-            className="flex-1 py-3 rounded-xl glass-light text-asaka-500 font-bold text-sm">
+            className="flex-1 py-3 rounded-xl glass-light text-salmon-500 font-bold text-sm">
             Annuler
           </button>
           <button onClick={handleSubmit}
@@ -1306,11 +1306,11 @@ const CustomerProfile = ({
   // ── Not logged in ─────────────────────────────────────
   if (!currentCustomer) {
     return (
-      <div className="min-h-screen bg-asaka-900 flex flex-col items-center justify-center
+      <div className="min-h-screen bg-obsidian-900 flex flex-col items-center justify-center
         px-6 pt-24 text-center">
         <div className="text-7xl mb-5">👤</div>
         <h2 className="text-white font-black text-2xl mb-2">Espace fidélité</h2>
-        <p className="text-asaka-500 text-sm mb-8">Connectez-vous pour accéder à votre profil et vos points</p>
+        <p className="text-salmon-500 text-sm mb-8">Connectez-vous pour accéder à votre profil et vos points</p>
         <button onClick={() => openAuth('login')} className="btn-primary px-8 py-3.5 text-sm mb-3">
           Se connecter
         </button>
@@ -1391,7 +1391,7 @@ const CustomerProfile = ({
   ];
 
   return (
-    <div className="min-h-screen bg-asaka-900 pt-20 pb-28">
+    <div className="min-h-screen bg-obsidian-900 pt-20 pb-28">
       <div className="max-w-xl mx-auto px-4">
 
         {/* ════════════════════════════════════════════
@@ -1406,7 +1406,7 @@ const CustomerProfile = ({
           <div className="absolute top-4 right-4 flex items-center gap-2 z-20">
             <button onClick={(e) => { e.stopPropagation(); setShowSettings(true); }}
               className="w-8 h-8 rounded-xl glass-light flex items-center justify-center
-                text-asaka-500 hover:text-asaka-300 transition-colors">
+                text-salmon-500 hover:text-salmon-500 transition-colors">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"
                 className="w-4 h-4">
                 <path strokeLinecap="round" strokeLinejoin="round"
@@ -1432,11 +1432,11 @@ const CustomerProfile = ({
             <button onClick={() => setShowAvatarPicker(true)}
               className="relative flex-shrink-0">
               <Avatar customer={currentCustomer} size="xl"
-                className={`border-2 ${badge.bgClass || 'border-asaka-600/40'}`} />
+                className={`border-2 ${badge.bgClass || 'border-obsidian-600/40'}`} />
               {/* Edit pen — always visible, not just on hover */}
-              <div className="absolute -bottom-1.5 -right-1.5 w-6 h-6 bg-asaka-500
-                rounded-lg flex items-center justify-center border-2 border-asaka-900
-                shadow-glow-blue">
+              <div className="absolute -bottom-1.5 -right-1.5 w-6 h-6 bg-salmon-500
+                rounded-lg flex items-center justify-center border-2 border-obsidian-900
+                shadow-glow-salmon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5"
                   className="w-3 h-3">
                   <path strokeLinecap="round" strokeLinejoin="round"
@@ -1453,9 +1453,9 @@ const CustomerProfile = ({
 
               {/* Phone */}
               {currentCustomer.phone && (
-                <p className="text-asaka-400 text-xs flex items-center gap-1.5 truncate mb-0.5">
+                <p className="text-salmon-500 text-xs flex items-center gap-1.5 truncate mb-0.5">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"
-                    className="w-3 h-3 flex-shrink-0 text-asaka-600">
+                    className="w-3 h-3 flex-shrink-0 text-obsidian-400">
                     <path strokeLinecap="round" strokeLinejoin="round"
                       d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/>
                   </svg>
@@ -1468,9 +1468,9 @@ const CustomerProfile = ({
 
               {/* Email */}
               {currentCustomer.email && (
-                <p className="text-asaka-400 text-xs flex items-center gap-1.5 truncate mb-0.5">
+                <p className="text-salmon-500 text-xs flex items-center gap-1.5 truncate mb-0.5">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"
-                    className="w-3 h-3 flex-shrink-0 text-asaka-600">
+                    className="w-3 h-3 flex-shrink-0 text-obsidian-400">
                     <path strokeLinecap="round" strokeLinejoin="round"
                       d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/>
                   </svg>
@@ -1484,9 +1484,9 @@ const CustomerProfile = ({
                 const primary = addrs.find(a => a.primary) || addrs[0];
                 if (!primary) return null;
                 return (
-                  <p className="text-asaka-400 text-xs flex items-center gap-1.5 truncate mb-0.5">
+                  <p className="text-salmon-500 text-xs flex items-center gap-1.5 truncate mb-0.5">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"
-                      className="w-3 h-3 flex-shrink-0 text-asaka-600">
+                      className="w-3 h-3 flex-shrink-0 text-obsidian-400">
                       <path strokeLinecap="round" strokeLinejoin="round"
                         d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/>
                       <path strokeLinecap="round" strokeLinejoin="round"
@@ -1500,10 +1500,10 @@ const CustomerProfile = ({
               {/* Badge pill */}
               <div className="flex items-center gap-2 mt-2">
                 <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full
-                  text-xs font-bold ${badge.textColor} ${badge.bgClass || 'bg-asaka-800 border border-asaka-700/40'}`}>
+                  text-xs font-bold ${badge.textColor} ${badge.bgClass || 'bg-obsidian-800 border border-obsidian-700/40'}`}>
                   {badge.emoji} {badge.name}
                 </span>
-                <span className="text-asaka-700 text-xs">
+                <span className="text-obsidian-400 text-xs">
                   {currentCustomer.totalOrders || 0} cmd{(currentCustomer.totalOrders || 0) !== 1 ? 's' : ''}
                 </span>
               </div>
@@ -1515,14 +1515,14 @@ const CustomerProfile = ({
             <div className="flex justify-between text-xs mb-1.5">
               <span className={`font-bold ${badge.textColor}`}>{badge.emoji} {badge.name}</span>
               {nextInfo ? (
-                <span className="text-asaka-700">
+                <span className="text-obsidian-400">
                   {nextInfo.badge.emoji} {nextInfo.badge.name} — {nextInfo.remaining} cmd{nextInfo.remaining !== 1 ? 's' : ''}
                 </span>
               ) : (
-                <span className="text-asaka-300 font-bold">Niveau max 👑</span>
+                <span className="text-salmon-500 font-bold">Niveau max 👑</span>
               )}
             </div>
-            <div className="h-1.5 bg-asaka-900 rounded-full overflow-hidden border border-asaka-800">
+            <div className="h-1.5 bg-obsidian-900 rounded-full overflow-hidden border border-obsidian-800">
               <div className="h-full rounded-full transition-all duration-1000"
                 style={{
                   width: `${Math.min(100, progress)}%`,
@@ -1530,7 +1530,7 @@ const CustomerProfile = ({
                   boxShadow: '0 0 8px rgba(79,195,247,0.5)',
                 }} />
             </div>
-            <p className="text-asaka-700 text-[11px] mt-1">{badge.perks}</p>
+            <p className="text-obsidian-400 text-[11px] mt-1">{badge.perks}</p>
           </div>
         </div>
 
@@ -1538,13 +1538,13 @@ const CustomerProfile = ({
         <div className="grid grid-cols-3 gap-3 mb-5">
           {[
             { value: currentCustomer.totalOrders || 0,                  label: 'Commandes', color: 'text-white' },
-            { value: currentCustomer.points || 0,                       label: 'Points',    color: 'text-asaka-300', sub: `≈ ${pointsValue} DH` },
-            { value: `${Math.round(currentCustomer.totalSpent || 0)} DH`, label: 'Dépensé',  color: 'text-asaka-200' },
+            { value: currentCustomer.points || 0,                       label: 'Points',    color: 'text-salmon-500', sub: `≈ ${pointsValue} DH` },
+            { value: `${Math.round(currentCustomer.totalSpent || 0)} DH`, label: 'Dépensé',  color: 'text-champagne' },
           ].map(s => (
             <div key={s.label} className="glass rounded-2xl py-4 px-3 text-center">
               <div className={`${s.color} font-black text-xl leading-none`}>{s.value}</div>
-              <div className="text-asaka-600 text-xs mt-1">{s.label}</div>
-              {s.sub && <div className="text-asaka-700 text-[10px] mt-0.5">{s.sub}</div>}
+              <div className="text-obsidian-400 text-xs mt-1">{s.label}</div>
+              {s.sub && <div className="text-obsidian-400 text-[10px] mt-0.5">{s.sub}</div>}
             </div>
           ))}
         </div>
@@ -1555,21 +1555,21 @@ const CustomerProfile = ({
             <button key={tab.id} onClick={() => setActiveTab(tab.id)}
               className={`flex-1 py-2.5 rounded-xl text-xs font-bold transition-all ${
                 activeTab === tab.id
-                  ? 'bg-asaka-500 text-white'
-                  : 'glass-light text-asaka-600 hover:text-white'
+                  ? 'bg-salmon-500 text-white'
+                  : 'glass-light text-obsidian-400 hover:text-white'
               }`}>
               {tab.emoji} {tab.label}
               {tab.id === 'avantages' && (currentCustomer.coupons || []).filter(c => !c.usedAt && !(c.expiresAt && new Date(c.expiresAt) < new Date())).length > 0 && (
-                <span className="ml-1.5 bg-asaka-500 text-white text-[9px] font-black
+                <span className="ml-1.5 bg-salmon-500 text-white text-[9px] font-black
                   px-1.5 py-0.5 rounded-full">
                   {(currentCustomer.coupons || []).filter(c => !c.usedAt && !(c.expiresAt && new Date(c.expiresAt) < new Date())).length}
                 </span>
               )}
               {tab.id === 'history' && history.length > 0 && (
-                <span className="ml-1 text-asaka-400 font-normal">({history.length})</span>
+                <span className="ml-1 text-salmon-500 font-normal">({history.length})</span>
               )}
               {tab.id === 'reviews' && pendingReviews.length > 0 && (
-                <span className="ml-1.5 bg-amber-500 text-asaka-900 text-[9px] font-black
+                <span className="ml-1.5 bg-amber-500 text-salmon-500 text-[9px] font-black
                   px-1.5 py-0.5 rounded-full">
                   {pendingReviews.length}
                 </span>
@@ -1588,31 +1588,31 @@ const CustomerProfile = ({
             <div className="card-asaka p-5">
               <div className="flex items-start justify-between mb-4">
                 <div>
-                  <p className="text-asaka-600 text-[10px] font-bold uppercase tracking-widest mb-1">
+                  <p className="text-obsidian-400 text-[10px] font-bold uppercase tracking-widest mb-1">
                     Solde de points
                   </p>
                   <div className="flex items-baseline gap-1">
-                    <span className="text-asaka-300 font-black text-3xl">{currentCustomer.points || 0}</span>
-                    <span className="text-asaka-600 text-sm">pts</span>
+                    <span className="text-salmon-500 font-black text-3xl">{currentCustomer.points || 0}</span>
+                    <span className="text-obsidian-400 text-sm">pts</span>
                   </div>
-                  <p className="text-asaka-500 text-xs mt-0.5">≈ {pointsValue} DH de réduction</p>
+                  <p className="text-salmon-500 text-xs mt-0.5">≈ {pointsValue} DH de réduction</p>
                 </div>
                 <div className="text-4xl">⭐</div>
               </div>
               {canRedeem ? (
                 <div className="bg-green-900/20 border border-green-700/30 rounded-xl p-3">
                   <p className="text-green-400 font-bold text-xs">✅ Points utilisables à la caisse</p>
-                  <p className="text-asaka-500 text-xs mt-0.5">
+                  <p className="text-salmon-500 text-xs mt-0.5">
                     Utilisez vos points lors du checkout pour réduire votre total.
                   </p>
                 </div>
               ) : (
-                <div className="border border-asaka-800 rounded-xl p-3">
-                  <p className="text-asaka-600 text-xs">
+                <div className="border border-obsidian-800 rounded-xl p-3">
+                  <p className="text-obsidian-400 text-xs">
                     Encore {MIN_REDEEM - (currentCustomer.points || 0)} pts pour débloquer les récompenses
                   </p>
-                  <div className="h-1.5 bg-asaka-900 rounded-full mt-2 overflow-hidden">
-                    <div className="h-full bg-asaka-500 rounded-full transition-all"
+                  <div className="h-1.5 bg-obsidian-900 rounded-full mt-2 overflow-hidden">
+                    <div className="h-full bg-salmon-500 rounded-full transition-all"
                       style={{ width: `${Math.min(100, ((currentCustomer.points || 0) / MIN_REDEEM) * 100)}%` }} />
                   </div>
                 </div>
@@ -1622,12 +1622,12 @@ const CustomerProfile = ({
             {/* — Promos & Coupons — */}
             <div className="card-asaka p-5">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-asaka-500 font-bold text-[10px] uppercase tracking-widest">
+                <h3 className="text-salmon-500 font-bold text-[10px] uppercase tracking-widest">
                   Promos & Coupons
                 </h3>
                 {(currentCustomer.coupons || []).filter(c => !c.usedAt).length > 0 && (
                   <span className="text-[10px] px-2 py-0.5 rounded-full font-bold
-                    bg-asaka-500/15 text-asaka-400 border border-asaka-500/25">
+                    bg-salmon-500/15 text-salmon-500 border border-salmon-500/25">
                     {(currentCustomer.coupons || []).filter(c => !c.usedAt).length} actif{(currentCustomer.coupons || []).filter(c => !c.usedAt).length > 1 ? 's' : ''}
                   </span>
                 )}
@@ -1635,8 +1635,8 @@ const CustomerProfile = ({
               {(currentCustomer.coupons || []).length === 0 ? (
                 <div className="text-center py-4">
                   <div className="text-3xl mb-2">🎟️</div>
-                  <p className="text-asaka-600 text-sm">Aucun coupon pour le moment.</p>
-                  <p className="text-asaka-700 text-xs mt-1">
+                  <p className="text-obsidian-400 text-sm">Aucun coupon pour le moment.</p>
+                  <p className="text-obsidian-400 text-xs mt-1">
                     Les coupons apparaîtront ici après promotions ou récompenses.
                   </p>
                 </div>
@@ -1649,27 +1649,27 @@ const CustomerProfile = ({
                     return (
                       <div key={coupon.id} className={`rounded-xl border p-3.5 transition-all ${
                         inactive
-                          ? 'border-asaka-800/30 bg-asaka-900/40 opacity-55'
-                          : 'border-asaka-600/30 bg-asaka-800/40'
+                          ? 'border-obsidian-800/30 bg-obsidian-900/40 opacity-55'
+                          : 'border-obsidian-600/30 bg-obsidian-800/40'
                       }`}>
                         <div className="flex items-start gap-3">
                           <div className={`w-9 h-9 rounded-xl flex items-center justify-center
                             flex-shrink-0 text-base ${
-                            inactive ? 'bg-asaka-800 text-asaka-700' : 'bg-asaka-500/20 text-asaka-300'
+                            inactive ? 'bg-obsidian-800 text-obsidian-400' : 'bg-salmon-500/20 text-salmon-500'
                           }`}>🎟️</div>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 flex-wrap">
                               <span className={`font-black text-sm tracking-wider ${
-                                inactive ? 'text-asaka-700' : 'text-white'
+                                inactive ? 'text-obsidian-400' : 'text-white'
                               }`}>{coupon.code}</span>
                               <span className={`font-black text-sm ${
-                                inactive ? 'text-asaka-700' : 'text-asaka-300'
+                                inactive ? 'text-obsidian-400' : 'text-salmon-500'
                               }`}>
                                 {coupon.type === 'percent' ? `-${coupon.value}%` : `-${coupon.value} DH`}
                               </span>
                               {isUsed && (
                                 <span className="text-[9px] px-1.5 py-0.5 rounded font-bold
-                                  bg-asaka-900 text-asaka-700 border border-asaka-800">Utilisé</span>
+                                  bg-obsidian-900 text-obsidian-400 border border-obsidian-800">Utilisé</span>
                               )}
                               {isExpired && !isUsed && (
                                 <span className="text-[9px] px-1.5 py-0.5 rounded font-bold
@@ -1677,10 +1677,10 @@ const CustomerProfile = ({
                               )}
                             </div>
                             <p className={`text-xs mt-0.5 truncate ${
-                              inactive ? 'text-asaka-800' : 'text-asaka-500'
+                              inactive ? 'text-obsidian-400' : 'text-salmon-500'
                             }`}>{coupon.description}</p>
                             {isUsed && coupon.usedOnOrder && (
-                              <p className="text-[10px] text-asaka-800 mt-0.5">
+                              <p className="text-[10px] text-obsidian-400 mt-0.5">
                                 Utilisé sur commande {coupon.usedOnOrder} · {coupon.usedAt}
                               </p>
                             )}
@@ -1690,7 +1690,7 @@ const CustomerProfile = ({
                               </p>
                             )}
                             {coupon.minOrder > 0 && !inactive && (
-                              <p className="text-[10px] text-asaka-700 mt-0.5">
+                              <p className="text-[10px] text-obsidian-400 mt-0.5">
                                 Commande minimum : {coupon.minOrder} DH
                               </p>
                             )}
@@ -1711,8 +1711,8 @@ const CustomerProfile = ({
                                 navigate('cart');
                               }}
                               className="flex-shrink-0 px-3 py-2 rounded-xl text-xs font-bold
-                                bg-asaka-500/15 border border-asaka-500/30 text-asaka-300
-                                hover:bg-asaka-500/25 transition-all active:scale-95">
+                                bg-salmon-500/15 border border-salmon-500/30 text-salmon-500
+                                hover:bg-salmon-500/25 transition-all active:scale-95">
                               Appliquer
                             </button>
                           )}
@@ -1734,7 +1734,7 @@ const CustomerProfile = ({
           <div className="space-y-4">
             {/* 6 tiers */}
             <div className="card-asaka p-5">
-              <h3 className="text-asaka-500 font-bold text-[10px] uppercase tracking-widest mb-4">
+              <h3 className="text-salmon-500 font-bold text-[10px] uppercase tracking-widest mb-4">
                 Niveaux de fidélité
               </h3>
               <div className="space-y-2">
@@ -1748,19 +1748,19 @@ const CustomerProfile = ({
                       isCurrent
                         ? `${b.bgClass} ring-1 ring-asaka-400/20`
                         : unlocked
-                          ? 'border-asaka-800/30 bg-asaka-800/20'
-                          : 'border-asaka-900 bg-asaka-900/60 opacity-50'
+                          ? 'border-obsidian-800/30 bg-obsidian-800/20'
+                          : 'border-obsidian-900 bg-obsidian-900/60 opacity-50'
                     }`}>
                       <div className="flex items-center gap-3">
                         <span className={`text-2xl ${!unlocked ? 'grayscale' : ''}`}>{b.emoji}</span>
                         <div className="flex-1">
                           <div className="flex items-center gap-2">
                             <span className={`font-black text-sm ${
-                              isCurrent ? b.textColor : unlocked ? 'text-asaka-300' : 'text-asaka-700'
+                              isCurrent ? b.textColor : unlocked ? 'text-salmon-500' : 'text-obsidian-400'
                             }`}>{b.name}</span>
                             {isCurrent && (
                               <span className="text-[9px] px-2 py-0.5 rounded-full font-bold
-                                bg-asaka-500/20 text-asaka-400 border border-asaka-500/30">
+                                bg-salmon-500/20 text-salmon-500 border border-salmon-500/30">
                                 Actuel
                               </span>
                             )}
@@ -1768,28 +1768,28 @@ const CustomerProfile = ({
                               <span className="text-green-500 text-xs">✓</span>
                             )}
                           </div>
-                          <p className={`text-[11px] mt-0.5 ${unlocked ? 'text-asaka-600' : 'text-asaka-800'}`}>
+                          <p className={`text-[11px] mt-0.5 ${unlocked ? 'text-obsidian-400' : 'text-obsidian-400'}`}>
                             {b.minOrders === 0 ? 'Niveau de départ' : `À partir de ${b.minOrders} commandes`}
                           </p>
                         </div>
                         <span className={`text-xs font-black ${
-                          b.discount > 0 ? (isCurrent ? b.textColor : 'text-asaka-600') : 'text-asaka-800'
+                          b.discount > 0 ? (isCurrent ? b.textColor : 'text-obsidian-400') : 'text-obsidian-400'
                         }`}>
                           {b.discount > 0 ? `-${b.discount}%` : '—'}
                         </span>
                       </div>
                       {/* Reward preview for next tier */}
                       {b.reward && isNext && (
-                        <div className="mt-2.5 pt-2.5 border-t border-asaka-800/60 text-xs">
-                          <p className="text-asaka-500 font-semibold">
+                        <div className="mt-2.5 pt-2.5 border-t border-obsidian-800/60 text-xs">
+                          <p className="text-salmon-500 font-semibold">
                             {b.reward.emoji} Prochain palier : {b.reward.label}
                           </p>
-                          <p className="text-asaka-700 mt-0.5">{b.reward.details}</p>
+                          <p className="text-obsidian-400 mt-0.5">{b.reward.details}</p>
                         </div>
                       )}
                       {/* Current reward */}
                       {b.reward && isCurrent && (
-                        <div className="mt-2.5 pt-2.5 border-t border-asaka-700/30 text-xs">
+                        <div className="mt-2.5 pt-2.5 border-t border-obsidian-700/30 text-xs">
                           <p className={`font-bold ${b.textColor}`}>
                             {b.reward.emoji} {b.perks}
                           </p>
@@ -1820,7 +1820,7 @@ const CustomerProfile = ({
                   <p className="text-amber-400 font-black text-sm">
                     {pendingReviews.length} avis à laisser
                   </p>
-                  <p className="text-asaka-600 text-xs mt-0.5">
+                  <p className="text-obsidian-400 text-xs mt-0.5">
                     Donnez votre avis et recevez une offre exclusive — voir l'onglet Avis →
                   </p>
                 </div>
@@ -1831,8 +1831,8 @@ const CustomerProfile = ({
             {history.length === 0 && (
               <div className="card-asaka p-8 text-center">
                 <div className="text-4xl mb-3">📋</div>
-                <div className="text-asaka-300 font-bold text-base">Aucune commande</div>
-                <div className="text-asaka-600 text-sm mt-1">Vos commandes apparaîtront ici</div>
+                <div className="text-salmon-500 font-bold text-base">Aucune commande</div>
+                <div className="text-obsidian-400 text-sm mt-1">Vos commandes apparaîtront ici</div>
                 <button onClick={() => navigate('menu')}
                   className="btn-primary px-6 py-2.5 text-sm mt-4">
                   Commander 🍣
@@ -1849,7 +1849,7 @@ const CustomerProfile = ({
                 <div className="flex items-start justify-between mb-3">
                   <div>
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-asaka-300 font-black text-sm">{order.id}</span>
+                      <span className="text-salmon-500 font-black text-sm">{order.id}</span>
                       {isCancelled ? (
                         <span className="text-[10px] px-2 py-0.5 rounded-full font-bold
                           bg-red-900/30 text-red-400 border border-red-800/30">
@@ -1863,7 +1863,7 @@ const CustomerProfile = ({
                       )}
                       {order.mode && (
                         <span className="text-[10px] px-2 py-0.5 rounded-full font-bold
-                          bg-asaka-800/60 text-asaka-400 border border-asaka-700/30">
+                          bg-obsidian-800/60 text-salmon-500 border border-obsidian-700/30">
                           {order.mode === 'delivery' ? '🛵 Livraison' : '🥡 À Emporter'}
                         </span>
                       )}
@@ -1874,10 +1874,10 @@ const CustomerProfile = ({
                         </span>
                       )}
                     </div>
-                    <p className="text-asaka-600 text-xs mt-1">{order.date}</p>
+                    <p className="text-obsidian-400 text-xs mt-1">{order.date}</p>
                   </div>
                   <span className={`font-black text-base flex-shrink-0 ml-3 ${
-                    isCancelled ? 'text-asaka-600 line-through' : 'text-asaka-200'
+                    isCancelled ? 'text-obsidian-400 line-through' : 'text-champagne'
                   }`}>
                     {order.total} DH
                   </span>
@@ -1888,13 +1888,13 @@ const CustomerProfile = ({
                   <div className="flex flex-wrap gap-1.5 mb-3">
                     {order.items.slice(0, 4).map((name, j) => (
                       <span key={j} className="text-[10px] px-2 py-1 rounded-lg
-                        bg-asaka-900/60 border border-asaka-700/30 text-asaka-400">
+                        bg-obsidian-900/60 border border-obsidian-700/30 text-salmon-500">
                         {name}
                       </span>
                     ))}
                     {order.items.length > 4 && (
                       <span className="text-[10px] px-2 py-1 rounded-lg
-                        bg-asaka-900/60 border border-asaka-700/30 text-asaka-600">
+                        bg-obsidian-900/60 border border-obsidian-700/30 text-obsidian-400">
                         +{order.items.length - 4} autre{order.items.length - 4 > 1 ? 's' : ''}
                       </span>
                     )}
@@ -1903,7 +1903,7 @@ const CustomerProfile = ({
 
                 {/* Stars summary if review exists */}
                 {order.review && (
-                  <div className="flex items-center gap-1 pt-2 border-t border-asaka-700/20">
+                  <div className="flex items-center gap-1 pt-2 border-t border-obsidian-700/20">
                     <div className="flex">
                       {[1,2,3,4,5].map(s => (
                         <span key={s} className="text-xs">
@@ -1912,13 +1912,13 @@ const CustomerProfile = ({
                       ))}
                     </div>
                     {order.review.comment && (
-                      <p className="text-asaka-600 text-xs truncate ml-1">{order.review.comment}</p>
+                      <p className="text-obsidian-400 text-xs truncate ml-1">{order.review.comment}</p>
                     )}
                   </div>
                 )}
 
                 {/* ── Reorder actions ── */}
-                <div className="flex gap-2 pt-3 mt-1 border-t border-asaka-700/20">
+                <div className="flex gap-2 pt-3 mt-1 border-t border-obsidian-700/20">
                   {/* Reorder — same items loaded to cart */}
                   <button
                     onClick={() => {
@@ -1936,8 +1936,8 @@ const CustomerProfile = ({
                       navigate('cart');
                     }}
                     className="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3
-                      rounded-xl border border-asaka-500/40 bg-asaka-500/10 text-asaka-300
-                      text-xs font-bold hover:bg-asaka-500/20 transition-all active:scale-[0.97]">
+                      rounded-xl border border-salmon-500/40 bg-salmon-500/10 text-salmon-500
+                      text-xs font-bold hover:bg-salmon-500/20 transition-all active:scale-[0.97]">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
                       className="w-3.5 h-3.5 flex-shrink-0">
                       <path strokeLinecap="round" strokeLinejoin="round"
@@ -1974,8 +1974,8 @@ const CustomerProfile = ({
                     <button
                       onClick={() => navigate('menu')}
                       className="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3
-                        rounded-xl border border-asaka-700/40 bg-asaka-800/40 text-asaka-400
-                        text-xs font-bold hover:bg-asaka-700/40 transition-all active:scale-[0.97]">
+                        rounded-xl border border-obsidian-700/40 bg-obsidian-800/40 text-salmon-500
+                        text-xs font-bold hover:bg-obsidian-700/40 transition-all active:scale-[0.97]">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
                         className="w-3.5 h-3.5 flex-shrink-0">
                         <path strokeLinecap="round" strokeLinejoin="round"
@@ -2003,23 +2003,23 @@ const CustomerProfile = ({
                 <h3 className="text-amber-400 font-black text-sm mb-1">
                   ✍️ Avis en attente ({pendingReviews.length})
                 </h3>
-                <p className="text-asaka-600 text-xs mb-3">
+                <p className="text-obsidian-400 text-xs mb-3">
                   Partagez votre expérience et recevez une offre exclusive pour chaque avis publié !
                 </p>
                 <div className="space-y-2">
                   {pendingReviews.map((order, i) => (
                     <div key={i}
                       className="flex items-center gap-3 px-3 py-3 rounded-xl
-                        border border-asaka-700/30 bg-asaka-900/40">
-                      <div className="w-9 h-9 rounded-xl bg-asaka-700 flex items-center
+                        border border-obsidian-700/30 bg-obsidian-900/40">
+                      <div className="w-9 h-9 rounded-xl bg-obsidian-700 flex items-center
                         justify-center text-lg flex-shrink-0">
                         {order.mode === 'delivery' ? '🛵' : '🥡'}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="text-asaka-200 font-bold text-sm">{order.id}</div>
-                        <div className="text-asaka-600 text-xs">{order.date} · {order.total} DH</div>
+                        <div className="text-champagne font-bold text-sm">{order.id}</div>
+                        <div className="text-obsidian-400 text-xs">{order.date} · {order.total} DH</div>
                         {order.items?.length > 0 && (
-                          <div className="text-asaka-700 text-[10px] mt-0.5 truncate">
+                          <div className="text-obsidian-400 text-[10px] mt-0.5 truncate">
                             {order.items.slice(0, 2).join(', ')}
                             {order.items.length > 2 ? ` +${order.items.length - 2}` : ''}
                           </div>
@@ -2041,19 +2041,19 @@ const CustomerProfile = ({
             {/* Completed reviews */}
             {completedReviews.length > 0 && (
               <div className="card-asaka p-4">
-                <h3 className="text-asaka-500 font-bold text-[10px] uppercase tracking-widest mb-3">
+                <h3 className="text-salmon-500 font-bold text-[10px] uppercase tracking-widest mb-3">
                   Mes avis publiés ({completedReviews.length})
                 </h3>
                 <div className="space-y-4">
                   {completedReviews.map((order, i) => (
-                    <div key={i} className={`${i > 0 ? 'pt-4 border-t border-asaka-700/20' : ''}`}>
+                    <div key={i} className={`${i > 0 ? 'pt-4 border-t border-obsidian-700/20' : ''}`}>
                       {/* Order reference */}
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-2">
-                          <span className="text-asaka-400 font-bold text-xs">{order.id}</span>
-                          <span className="text-asaka-700 text-[10px]">{order.date}</span>
+                          <span className="text-salmon-500 font-bold text-xs">{order.id}</span>
+                          <span className="text-obsidian-400 text-[10px]">{order.date}</span>
                         </div>
-                        <span className="text-asaka-500 text-xs">{order.total} DH</span>
+                        <span className="text-salmon-500 text-xs">{order.total} DH</span>
                       </div>
                       {/* Stars */}
                       <div className="flex items-center gap-2 mb-1.5">
@@ -2064,11 +2064,11 @@ const CustomerProfile = ({
                             </span>
                           ))}
                         </div>
-                        <span className="text-asaka-700 text-xs">{order.review.date}</span>
+                        <span className="text-obsidian-400 text-xs">{order.review.date}</span>
                       </div>
                       {/* Comment */}
                       {order.review.comment && (
-                        <p className="text-asaka-400 text-sm leading-relaxed">
+                        <p className="text-salmon-500 text-sm leading-relaxed">
                           "{order.review.comment}"
                         </p>
                       )}
@@ -2077,7 +2077,7 @@ const CustomerProfile = ({
                         <div className="flex gap-2 mt-2">
                           {order.review.images.map((src, j) => (
                             <img key={j} src={src} alt=""
-                              className="w-14 h-14 rounded-xl object-cover border border-asaka-600/30" />
+                              className="w-14 h-14 rounded-xl object-cover border border-obsidian-600/30" />
                           ))}
                         </div>
                       )}
@@ -2091,8 +2091,8 @@ const CustomerProfile = ({
             {history.length === 0 && (
               <div className="card-asaka p-8 text-center">
                 <div className="text-4xl mb-3">✍️</div>
-                <div className="text-asaka-300 font-bold text-base">Aucun avis pour l'instant</div>
-                <div className="text-asaka-600 text-sm mt-1">
+                <div className="text-salmon-500 font-bold text-base">Aucun avis pour l'instant</div>
+                <div className="text-obsidian-400 text-sm mt-1">
                   Passez votre première commande pour pouvoir laisser un avis
                 </div>
                 <button onClick={() => navigate('menu')}
@@ -2105,7 +2105,7 @@ const CustomerProfile = ({
             {history.length > 0 && pendingReviews.length === 0 && completedReviews.length === 0 && (
               <div className="card-asaka p-6 text-center">
                 <div className="text-3xl mb-2">✅</div>
-                <p className="text-asaka-400 text-sm font-bold">Tous vos avis sont à jour !</p>
+                <p className="text-salmon-500 text-sm font-bold">Tous vos avis sont à jour !</p>
               </div>
             )}
           </div>
@@ -2117,8 +2117,8 @@ const CustomerProfile = ({
             {savedAddresses.length === 0 ? (
               <div className="card-asaka p-8 text-center">
                 <div className="text-4xl mb-3">📍</div>
-                <p className="text-asaka-300 font-bold text-base">Aucune adresse enregistrée</p>
-                <p className="text-asaka-600 text-sm mt-1">
+                <p className="text-salmon-500 font-bold text-base">Aucune adresse enregistrée</p>
+                <p className="text-obsidian-400 text-sm mt-1">
                   Ajoutez une adresse pour commander plus rapidement
                 </p>
                 <button onClick={() => setShowAddAddr(true)}
@@ -2134,14 +2134,14 @@ const CustomerProfile = ({
                     <div key={addr.id}
                       className={`rounded-2xl border p-4 transition-all ${
                         isPrimary
-                          ? 'border-asaka-500/50 bg-asaka-500/10'
-                          : 'border-asaka-700/40 bg-asaka-800/30'
+                          ? 'border-salmon-500/50 bg-salmon-500/10'
+                          : 'border-obsidian-700/40 bg-obsidian-800/30'
                       }`}>
                       {/* Header row */}
                       <div className="flex items-start gap-3">
                         <div className={`w-10 h-10 rounded-xl flex items-center justify-center
                           text-lg flex-shrink-0 ${
-                          isPrimary ? 'bg-asaka-500/30' : 'bg-asaka-700/40'
+                          isPrimary ? 'bg-salmon-500/30' : 'bg-obsidian-700/40'
                         }`}>
                           {addr.gpsLink ? '📍' : '🏠'}
                         </div>
@@ -2150,7 +2150,7 @@ const CustomerProfile = ({
                             <span className="text-white font-bold text-sm">{addr.name}</span>
                             {isPrimary && (
                               <span className="text-[10px] px-2 py-0.5 rounded-full font-black
-                                bg-asaka-500/30 text-asaka-300 border border-asaka-500/40">
+                                bg-salmon-500/30 text-salmon-500 border border-salmon-500/40">
                                 ★ Principale
                               </span>
                             )}
@@ -2161,7 +2161,7 @@ const CustomerProfile = ({
                               </span>
                             )}
                           </div>
-                          <p className="text-asaka-400 text-xs mt-1 leading-relaxed">
+                          <p className="text-salmon-500 text-xs mt-1 leading-relaxed">
                             {addr.address}
                           </p>
                           {addr.gpsLink && (
@@ -2175,12 +2175,12 @@ const CustomerProfile = ({
                       </div>
 
                       {/* Action row */}
-                      <div className="flex gap-2 mt-3 pt-3 border-t border-asaka-700/20">
+                      <div className="flex gap-2 mt-3 pt-3 border-t border-obsidian-700/20">
                         {!isPrimary && (
                           <button onClick={() => handleSetPrimary(addr.id)}
                             className="flex-1 py-2 rounded-xl text-xs font-bold
-                              border border-asaka-600/40 bg-asaka-700/20 text-asaka-300
-                              hover:bg-asaka-600/30 hover:text-white transition-all active:scale-95">
+                              border border-obsidian-600/40 bg-obsidian-700/20 text-salmon-500
+                              hover:bg-obsidian-600/30 hover:text-white transition-all active:scale-95">
                             ★ Définir comme principale
                           </button>
                         )}
@@ -2198,8 +2198,8 @@ const CustomerProfile = ({
                 {/* Add new */}
                 <button onClick={() => setShowAddAddr(true)}
                   className="w-full py-4 rounded-2xl border-2 border-dashed
-                    border-asaka-700/40 text-asaka-500 text-sm font-bold
-                    hover:border-asaka-500/50 hover:text-asaka-300 transition-all">
+                    border-obsidian-700/40 text-salmon-500 text-sm font-bold
+                    hover:border-salmon-500/50 hover:text-salmon-500 transition-all">
                   + Ajouter une adresse
                 </button>
               </>

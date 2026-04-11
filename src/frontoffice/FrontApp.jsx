@@ -15,7 +15,8 @@ import OrderConfirmation from './components/OrderConfirmation';
 import CustomerAuth from './components/CustomerAuth';
 import CustomerProfile from './components/CustomerProfile';
 import Footer from './components/Footer';
-import ActiveOrderBar from './components/ActiveOrderBar';
+import EntreNous from './components/EntreNous';
+import FidelitePage from './components/FidelitePage';
 import { ToastContainer } from '../utils/toast';
 import { ORDER_CONFIG } from '../data/asakaData';
 import {
@@ -90,10 +91,9 @@ const FrontApp = ({
 
   // ── Navigation ────────────────────────────────────────
   const navigate = (target) => {
-    // Snap to top BEFORE React renders the new page so the content
-    // always appears anchored to the top of the viewport.
     window.scrollTo(0, 0);
     setPage(target);
+    setShowAuth(false); // always close auth card on any navigation
   };
 
   // Safety-net: whenever the active page changes (including back-nav),
@@ -323,6 +323,8 @@ const FrontApp = ({
       case 'cart':         return <CartPage          {...sharedProps} />;
       case 'checkout':     return <UnifiedCheckout   {...sharedProps} />;
       case 'confirmation': return <OrderConfirmation {...sharedProps} />;
+      case 'entre-nous':   return <EntreNous         {...sharedProps} />;
+      case 'fidelite':     return <FidelitePage      {...sharedProps} />;
       case 'profile':      return <CustomerProfile   {...sharedProps} setCurrentCustomer={setCurrentCustomer} setFrontCustomers={setFrontCustomers} setAvisData={setAvisData} />;
       default:             return <HomePage          {...sharedProps} />;
     }
@@ -331,7 +333,7 @@ const FrontApp = ({
   const hideBottomNav = ['checkout', 'confirmation'].includes(page);
 
   return (
-    <div className="min-h-screen bg-asaka-900 text-white font-sans antialiased">
+    <div className="min-h-screen bg-obsidian-950 text-white font-sans antialiased">
       {/* Desktop top navbar */}
       <FrontNavbar
         {...sharedProps}

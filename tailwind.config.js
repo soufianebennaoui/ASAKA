@@ -8,7 +8,28 @@ export default {
   theme: {
     extend: {
       colors: {
-        // ── Asaka Sushi brand palette ──────────────────────────────
+        // ── Asaka Sushi Premium Palette (Front Office) ───────────
+        obsidian: {
+          950: '#050505',
+          900: '#0A0A0A',
+          800: '#141414',
+          700: '#1C1C1C',
+        },
+        salmon: {
+          400: '#FF9E80',
+          500: '#FF8C69',
+          600: '#E67E5E',
+        },
+        'sea-blue': {
+          400: '#81D4FA',
+          500: '#4FC3F7',
+          600: '#29B6F6',
+        },
+        champagne: {
+          DEFAULT: '#F5F5DC',
+          muted: '#D0C9B5',
+        },
+        // ── Asaka Back Office Palette (Admin) ─────────────────────
         asaka: {
           950:  '#030810',
           900:  '#060d18',
@@ -25,20 +46,12 @@ export default {
           50:   '#e1f5fe',
           muted:'#94a3b8',
         },
-        gold: {
-          400: '#fbbf24',
-          500: '#f59e0b',
-          600: '#d97706',
-        },
-        coral: {
-          400: '#f87171',
-          500: '#ef4444',
-          600: '#dc2626',
-        },
         wa: '#25d366',
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        brush: ['Ma Shan Zheng', 'cursive'],
+        serif: ['Lora', 'serif'],
       },
       animation: {
         'float':        'float 6s ease-in-out infinite alternate',
@@ -94,8 +107,10 @@ export default {
         },
       },
       boxShadow: {
-        'glow-blue': '0 0 20px rgba(21,101,192,0.4), 0 0 60px rgba(21,101,192,0.15)',
-        'glow-ice':  '0 0 20px rgba(79,195,247,0.4), 0 0 60px rgba(79,195,247,0.15)',
+        'glow-salmon': '0 0 20px rgba(255,140,105,0.4), 0 0 60px rgba(255,140,105,0.15)',
+        'glow-sea':    '0 0 20px rgba(79,195,247,0.4),  0 0 60px rgba(79,195,247,0.15)',
+        'glow-blue':   '0 0 20px rgba(21,101,192,0.4),  0 0 60px rgba(21,101,192,0.15)',
+        'glow-ice':    '0 0 20px rgba(79,195,247,0.4),  0 0 60px rgba(79,195,247,0.15)',
       },
     },
   },

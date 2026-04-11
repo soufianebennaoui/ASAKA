@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Ma+Shan+Zheng&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -8,22 +10,24 @@
 
 /* ── CSS Variables ────────────────────────────────────────── */
 :root {
-  --bg-950:   #030810;
-  --bg-900:   #060d18;
-  --bg-800:   #0d1b2a;
-  --bg-700:   #1a2d4a;
-  --border:   #1e3a5f;
-  --blue:     #1565c0;
-  --ice:      #4fc3f7;
+  --bg-950:   #050505;
+  --bg-900:   #0A0A0A;
+  --bg-800:   #141414;
+  --bg-700:   #1C1C1C;
+  --border:   #333333;
+  --blue:     #4FC3F7;
+  --ice:      #81D4FA;
   --ice-dim:  rgba(79,195,247,0.15);
-  --blue-dim: rgba(21,101,192,0.2);
-  --white:    #f0f8ff;
-  --muted:    #94a3b8;
+  --blue-dim: rgba(79,195,247,0.2);
+  --white:    #F5F5DC;
+  --muted:    #D0C9B5;
   --green:    #22c55e;
   --amber:    #f59e0b;
   --coral:    #ef4444;
   --wa:       #25d366;
-  --font:     'Inter', system-ui, -apple-system, sans-serif;
+  --salmon:   #FF8C69;
+  --font:     'Lora', serif;
+  --font-brush: 'Ma Shan Zheng', cursive;
 }
 
 /* ── Base ─────────────────────────────────────────────────── */
@@ -36,7 +40,7 @@
   }
 
   body {
-    @apply bg-asaka-900 text-white font-sans antialiased;
+    @apply bg-obsidian-950 text-white font-sans antialiased;
     overscroll-behavior: none;
   }
 
@@ -47,19 +51,27 @@
 /* ── Typography ───────────────────────────────────────────── */
 @layer utilities {
   .text-gradient-ice {
-    background: linear-gradient(135deg, #1565c0, #4fc3f7, #81d4fa);
+    background: linear-gradient(135deg, #FF8C69, #FF9E80, #E67E5E);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
   .text-gradient-shimmer {
-    background: linear-gradient(90deg, #4fc3f7, #f0f8ff, #4fc3f7);
+    background: linear-gradient(90deg, #FF8C69, #F5F5DC, #FF8C69);
     background-size: 200% auto;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     animation: shimmerText 3s linear infinite;
+  }
+  
+  .text-brush {
+    font-family: var(--font-brush);
+  }
+  
+  .bg-paper {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
   }
 }
 
@@ -71,70 +83,79 @@
 /* ── Glass & Surfaces ─────────────────────────────────────── */
 @layer components {
   .glass {
-    background: rgba(13,27,42,0.7);
+    background: rgba(20, 20, 20, 0.7);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(30,58,95,0.6);
+    border: 1px solid rgba(51, 51, 51, 0.6);
   }
 
   .glass-light {
-    background: rgba(13,27,42,0.4);
+    background: rgba(20, 20, 20, 0.4);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(79,195,247,0.15);
   }
 
   .card-asaka {
-    @apply bg-asaka-800 border border-asaka-600/40 rounded-2xl;
+    @apply bg-obsidian-800 border border-obsidian-700/60 rounded-2xl;
   }
 
   .card-asaka-hover {
     @apply card-asaka transition-all duration-300;
-    @apply hover:border-asaka-300/30 hover:bg-asaka-750;
+    @apply hover:border-salmon-500/30 hover:bg-obsidian-700;
   }
 
   /* Glow rings used in hero */
   .glow-ring {
     position: absolute;
     border-radius: 50%;
-    border: 1px solid rgba(79,195,247,0.12);
+    border: 1px solid rgba(255,140,105,0.12);
     animation: spinSlow 25s linear infinite;
   }
 
   .glow-ring-reverse {
     position: absolute;
     border-radius: 50%;
-    border: 1px solid rgba(21,101,192,0.15);
+    border: 1px solid rgba(79,195,247,0.15);
     animation: spinReverse 18s linear infinite;
   }
 
   /* CTA buttons */
   .btn-primary {
-    @apply bg-asaka-500 hover:bg-asaka-400 text-white font-bold;
+    @apply bg-salmon-500 hover:bg-salmon-400 text-obsidian-950 font-bold;
     @apply rounded-2xl transition-all duration-200;
-    @apply shadow-glow-blue hover:shadow-glow-ice hover:scale-[1.02] active:scale-[0.98];
+    @apply shadow-glow-salmon hover:shadow-glow-salmon hover:scale-[1.02] active:scale-[0.98];
+  }
+  
+  .btn-salmon {
+    @apply bg-salmon-500 hover:bg-salmon-400 text-obsidian-950 font-bold;
+    @apply rounded-2xl transition-all duration-200 shadow-glow-salmon;
+  }
+  
+  .btn-outline-sea {
+    @apply border border-sea-blue-500 text-sea-blue-500 rounded-2xl hover:bg-sea-blue-500/10 transition-colors;
   }
 
   .btn-secondary {
     background: rgba(79,195,247,0.08);
     border: 1px solid rgba(79,195,247,0.25);
-    @apply text-asaka-300 font-semibold rounded-2xl;
+    @apply text-sea-blue-400 font-semibold rounded-2xl;
     @apply transition-all duration-200;
-    @apply hover:bg-asaka-300/15 hover:border-asaka-300/50 hover:text-white;
+    @apply hover:bg-sea-blue-400/15 hover:border-sea-blue-400/50 hover:text-white;
   }
 
   .btn-ghost {
-    @apply text-asaka-300 font-medium rounded-xl;
+    @apply text-champagne-muted font-medium rounded-xl;
     @apply transition-all duration-200 hover:text-white;
     background: transparent;
   }
 
   /* Input fields */
   .input-asaka {
-    @apply w-full bg-asaka-800 border border-asaka-600/60 rounded-xl;
-    @apply text-white placeholder-asaka-muted px-4 py-3 text-sm;
-    @apply focus:outline-none focus:border-asaka-300/60 focus:ring-2;
-    focus-ring-color: rgba(79,195,247,0.15);
+    @apply w-full bg-obsidian-800 border border-obsidian-700/60 rounded-xl;
+    @apply text-white placeholder-champagne-muted px-4 py-3 text-sm;
+    @apply focus:outline-none focus:border-salmon-500/60 focus:ring-2;
+    focus-ring-color: rgba(255,140,105,0.15);
     @apply transition-all duration-200;
   }
 
@@ -146,8 +167,8 @@
   }
 
   .bottom-sheet-panel {
-    @apply fixed bottom-0 left-0 right-0 bg-asaka-800;
-    @apply rounded-t-3xl border-t border-asaka-600/50;
+    @apply fixed bottom-0 left-0 right-0 bg-obsidian-900;
+    @apply rounded-t-3xl border-t border-obsidian-800/50;
     @apply max-h-[85vh] overflow-y-auto;
     z-index: 60; /* above overlay; nav (z-70) sits on top of sheet */
     animation: slideUp 0.35s cubic-bezier(0.34,1.2,0.64,1) forwards;
@@ -167,8 +188,8 @@
   .bottom-nav {
     @apply fixed bottom-0 left-0 right-0;
     z-index: 70;
-    @apply bg-asaka-900/95 backdrop-blur-xl;
-    border-top: 1px solid rgba(30,58,95,0.8);
+    @apply bg-obsidian-950/95 backdrop-blur-xl;
+    border-top: 1px solid rgba(28, 28, 28, 0.8);
     padding-bottom: env(safe-area-inset-bottom);
   }
 }

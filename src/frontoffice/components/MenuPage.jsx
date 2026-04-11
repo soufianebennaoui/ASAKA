@@ -54,7 +54,7 @@ const ItemBottomSheet = ({ item, onClose, addToCart, getDiscountedPrice, openLig
 
         {/* Handle bar — drag to dismiss */}
         <div className="flex justify-center pt-3 pb-1" {...dragHandleProps}>
-          <div className="w-10 h-1.5 bg-asaka-500 rounded-full" />
+          <div className="w-10 h-1.5 bg-salmon-500 rounded-full" />
         </div>
 
         <div className="px-5 pb-6">
@@ -63,13 +63,13 @@ const ItemBottomSheet = ({ item, onClose, addToCart, getDiscountedPrice, openLig
             <div className="flex-1 pr-4">
               <div className="flex items-center gap-2 mb-1">
                 {item.image ? (
-                  <img src={item.image} alt={item.name} onClick={() => openLightbox(item.image)} className="w-16 h-16 object-cover rounded-xl shadow-md cursor-zoom-in" />
+                  <img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded-xl shadow-md pointer-events-none" />
                 ) : (
-                  <div className="w-16 h-16 rounded-xl bg-asaka-800 flex items-center justify-center text-asaka-500 text-[10px] text-center border border-asaka-700/50">Vide</div>
+                  <div className="w-16 h-16 rounded-xl bg-obsidian-900 flex items-center justify-center text-salmon-500 text-[10px] text-center border border-obsidian-800/50">Vide</div>
                 )}
                 {item.isSignature && (
-                  <span className="text-[11px] bg-asaka-500/20 text-asaka-300
-                    border border-asaka-500/30 rounded-full px-2.5 py-1 font-bold">
+                  <span className="text-[11px] bg-salmon-500/20 text-salmon-500
+                    border border-salmon-500/30 rounded-full px-2.5 py-1 font-bold">
                     ✨ Signature
                   </span>
                 )}
@@ -82,12 +82,12 @@ const ItemBottomSheet = ({ item, onClose, addToCart, getDiscountedPrice, openLig
               </div>
               <h2 className="text-white font-black text-xl leading-tight">{item.name}</h2>
               {item.pieces && (
-                <p className="text-asaka-muted text-sm mt-0.5">{item.pieces} pièces</p>
+                <p className="text-champagne-muted text-sm mt-0.5">{item.pieces} pièces</p>
               )}
             </div>
             <button onClick={handleClose}
               className="w-9 h-9 rounded-xl glass-light flex items-center justify-center
-                text-asaka-muted hover:text-white transition-colors flex-shrink-0">
+                text-champagne-muted hover:text-white transition-colors flex-shrink-0">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
                 className="w-5 h-5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/>
@@ -96,7 +96,7 @@ const ItemBottomSheet = ({ item, onClose, addToCart, getDiscountedPrice, openLig
           </div>
 
           {/* Description */}
-          <p className="text-asaka-muted text-sm leading-relaxed mb-5">
+          <p className="text-champagne-muted text-sm leading-relaxed mb-5">
             {item.description}
           </p>
 
@@ -107,8 +107,8 @@ const ItemBottomSheet = ({ item, onClose, addToCart, getDiscountedPrice, openLig
               <div className="flex flex-wrap gap-2">
                 {item.ingredients.map((ing, i) => (
                   <span key={i}
-                    className="text-xs bg-asaka-800 border border-asaka-600/40
-                      text-asaka-muted rounded-lg px-2.5 py-1 capitalize">
+                    className="text-xs bg-obsidian-900 border border-obsidian-700/40
+                      text-champagne-muted rounded-lg px-2.5 py-1 capitalize">
                     {ing}
                   </span>
                 ))}
@@ -120,7 +120,7 @@ const ItemBottomSheet = ({ item, onClose, addToCart, getDiscountedPrice, openLig
           {item.tags && item.tags.length > 0 && (
             <div className="flex flex-wrap gap-1.5 mb-5">
               {item.tags.map((tag, i) => (
-                <span key={i} className="text-[11px] text-asaka-600 font-medium">
+                <span key={i} className="text-[11px] text-obsidian-400 font-medium">
                   #{tag}
                 </span>
               ))}
@@ -133,7 +133,7 @@ const ItemBottomSheet = ({ item, onClose, addToCart, getDiscountedPrice, openLig
             <div className="flex items-center gap-3 glass rounded-xl px-1">
               <button
                 onClick={() => setQty(q => Math.max(1, q - 1))}
-                className="w-9 h-9 flex items-center justify-center text-asaka-300
+                className="w-9 h-9 flex items-center justify-center text-salmon-500
                   hover:text-white transition-colors tap-target">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
                   className="w-4 h-4">
@@ -143,7 +143,7 @@ const ItemBottomSheet = ({ item, onClose, addToCart, getDiscountedPrice, openLig
               <span className="text-white font-black text-lg w-6 text-center">{qty}</span>
               <button
                 onClick={() => setQty(q => q + 1)}
-                className="w-9 h-9 flex items-center justify-center text-asaka-300
+                className="w-9 h-9 flex items-center justify-center text-salmon-500
                   hover:text-white transition-colors tap-target">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
                   className="w-4 h-4">
@@ -184,15 +184,15 @@ const ItemCard = ({ item, onOpen, getDiscountedPrice, openLightbox }) => {
         transition-transform duration-150">
       {/* Emoji area */}
       <div className="flex items-center justify-center h-32
-        bg-asaka-800 relative w-full overflow-hidden">
+        bg-obsidian-900 relative w-full overflow-hidden">
         {item.image ? (
-          <img src={item.image} alt={item.name} onClick={(e) => { e.stopPropagation(); openLightbox(item.image); }} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 cursor-zoom-in" />
+          <img src={item.image} alt={item.name} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 pointer-events-none" />
         ) : (
-           <div className="text-asaka-600 text-xs">Image manquante</div>
+           <div className="text-obsidian-400 text-xs">Image manquante</div>
         )}
         {item.isSignature && (
-          <span className="absolute top-2 right-2 text-[10px] bg-asaka-500/30 text-asaka-300
-            border border-asaka-500/40 rounded-full px-1.5 py-0.5 font-bold">✨</span>
+          <span className="absolute top-2 right-2 text-[10px] bg-salmon-500/30 text-salmon-500
+            border border-salmon-500/40 rounded-full px-1.5 py-0.5 font-bold">✨</span>
         )}
         {item.isPopular && !item.isSignature && (
           <span className="absolute top-2 right-2 text-[10px] bg-amber-900/30 text-amber-400
@@ -206,17 +206,17 @@ const ItemCard = ({ item, onOpen, getDiscountedPrice, openLightbox }) => {
           {item.name}
         </h3>
         {item.pieces && (
-          <p className="text-asaka-muted text-xs mt-0.5">{item.pieces} pcs</p>
+          <p className="text-champagne-muted text-xs mt-0.5">{item.pieces} pcs</p>
         )}
         <div className="flex items-center justify-between mt-2.5">
           <div>
-            <span className="text-asaka-300 font-black text-sm">{price} DH</span>
+            <span className="text-salmon-500 font-black text-sm">{price} DH</span>
             {discounted && (
-              <s className="text-asaka-muted text-xs ml-1">{item.price}</s>
+              <s className="text-champagne-muted text-xs ml-1">{item.price}</s>
             )}
           </div>
-          <div className="w-7 h-7 rounded-lg bg-asaka-500/20 border border-asaka-500/30
-            flex items-center justify-center text-asaka-300 group-hover:bg-asaka-500
+          <div className="w-7 h-7 rounded-lg bg-salmon-500/20 border border-salmon-500/30
+            flex items-center justify-center text-salmon-500 group-hover:bg-salmon-500
             group-hover:text-white transition-all duration-200">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
               className="w-3.5 h-3.5">
@@ -238,30 +238,30 @@ const ItemRow = ({ item, onOpen, getDiscountedPrice, openLightbox }) => {
       onClick={() => onOpen(item)}
       className="card-asaka-hover w-full text-left flex items-center gap-4 p-4
         active:scale-[0.98] transition-transform duration-150">
-      <div className="w-14 h-14 rounded-xl bg-asaka-900 flex items-center justify-center
-        flex-shrink-0 border border-asaka-700/40 overflow-hidden">
+      <div className="w-14 h-14 rounded-xl bg-obsidian-950 flex items-center justify-center
+        flex-shrink-0 border border-obsidian-800/40 overflow-hidden">
         {item.image ? (
-          <img src={item.image} alt={item.name} onClick={(e) => { e.stopPropagation(); openLightbox(item.image); }} className="w-full h-full object-cover cursor-zoom-in" />
+          <img src={item.image} alt={item.name} className="w-full h-full object-cover pointer-events-none" />
         ) : (
-          <span className="text-[10px] text-asaka-600 text-center leading-tight">Image<br/>vide</span>
+          <span className="text-[10px] text-obsidian-400 text-center leading-tight">Image<br/>vide</span>
         )}
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
           <h3 className="text-white font-bold text-sm truncate">{item.name}</h3>
           {item.isSignature && (
-            <span className="text-[10px] text-asaka-300 flex-shrink-0">✨</span>
+            <span className="text-[10px] text-salmon-500 flex-shrink-0">✨</span>
           )}
         </div>
-        <p className="text-asaka-muted text-xs mt-0.5 line-clamp-1">{item.description}</p>
+        <p className="text-champagne-muted text-xs mt-0.5 line-clamp-1">{item.description}</p>
         {item.pieces && (
-          <p className="text-asaka-600 text-xs mt-0.5">{item.pieces} pièces</p>
+          <p className="text-obsidian-400 text-xs mt-0.5">{item.pieces} pièces</p>
         )}
       </div>
       <div className="flex-shrink-0 text-right">
-        <div className="text-asaka-300 font-black text-sm">{price} DH</div>
-        <div className="w-7 h-7 rounded-lg bg-asaka-500/20 border border-asaka-500/30
-          flex items-center justify-center text-asaka-300 mt-1 ml-auto">
+        <div className="text-salmon-500 font-black text-sm">{price} DH</div>
+        <div className="w-7 h-7 rounded-lg bg-salmon-500/20 border border-salmon-500/30
+          flex items-center justify-center text-salmon-500 mt-1 ml-auto">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
             className="w-3.5 h-3.5">
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 5v14M5 12h14"/>
@@ -281,7 +281,7 @@ const ModeSheet = ({ current, onSelect, onClose }) => {
       emoji: '🥡',
       label: 'À Emporter',
       desc:  'Venez récupérer votre commande en boutique',
-      color: 'border-asaka-500/60 bg-asaka-500/10 text-asaka-300 hover:bg-asaka-500/15',
+      color: 'border-salmon-500/60 bg-salmon-500/10 text-salmon-500 hover:bg-salmon-500/15',
     },
     {
       id:    'delivery',
@@ -294,19 +294,19 @@ const ModeSheet = ({ current, onSelect, onClose }) => {
 
   return (
     <>
-      <div className="fixed inset-0 bg-asaka-950/80 backdrop-blur-sm" style={{ zIndex: 45 }} onClick={onClose} />
+      <div className="fixed inset-0 bg-obsidian-950/80 backdrop-blur-sm" style={{ zIndex: 45 }} onClick={onClose} />
       <div
         ref={panelRef}
-        className="fixed bottom-0 inset-x-0 max-w-lg mx-auto bg-asaka-800
-          border-t border-asaka-700/50 rounded-t-3xl px-5 pt-4
+        className="fixed bottom-0 inset-x-0 max-w-lg mx-auto bg-obsidian-900
+          border-t border-obsidian-800/50 rounded-t-3xl px-5 pt-4
           pb-20 sm:pb-8"
         style={{ zIndex: 60, animation: 'slideUp 0.3s cubic-bezier(.34,1.56,.64,1) both' }}
         {...panelDragProps}>
         <div className="flex justify-center mb-5" {...dragHandleProps}>
-          <div className="w-10 h-1.5 bg-asaka-500 rounded-full" />
+          <div className="w-10 h-1.5 bg-salmon-500 rounded-full" />
         </div>
         <h3 className="text-white font-black text-lg mb-1">Mode de commande</h3>
-        <p className="text-asaka-500 text-sm mb-5">Choisissez comment vous souhaitez commander</p>
+        <p className="text-salmon-500 text-sm mb-5">Choisissez comment vous souhaitez commander</p>
         <div className="space-y-3">
           {MODES.map(m => (
             <button key={m.id} onClick={() => onSelect(m.id)}
@@ -333,7 +333,7 @@ const ModeSheet = ({ current, onSelect, onClose }) => {
           ))}
         </div>
         <button onClick={onClose}
-          className="w-full mt-4 py-3 rounded-xl glass-light text-asaka-500 font-bold text-sm">
+          className="w-full mt-4 py-3 rounded-xl glass-light text-salmon-500 font-bold text-sm">
           Annuler
         </button>
       </div>
@@ -417,17 +417,17 @@ const MenuPage = ({
   }, {});
 
   return (
-    <div className="min-h-screen bg-asaka-900">
+    <div className="min-h-screen bg-obsidian-950">
       {/* ── Sticky header ── */}
-      <div ref={stickyHeaderRef} className="sticky top-0 z-30 bg-asaka-900/95 backdrop-blur-xl
-        border-b border-asaka-700/40 pt-16 sm:pt-20">
+      <div ref={stickyHeaderRef} className="sticky top-0 z-30 bg-obsidian-950/95 backdrop-blur-xl
+        border-b border-obsidian-800/40 pt-16 sm:pt-20">
 
         {/* Search bar */}
         <div className="px-4 py-3">
           <div className="relative flex items-center gap-3">
             <div className="flex-1 relative">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-                className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-asaka-muted pointer-events-none">
+                className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-champagne-muted pointer-events-none">
                 <path strokeLinecap="round" strokeLinejoin="round"
                   d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
               </svg>
@@ -441,7 +441,7 @@ const MenuPage = ({
               />
               {search && (
                 <button onClick={() => setSearch('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-asaka-muted
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-champagne-muted
                     hover:text-white transition-colors">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
                     className="w-4 h-4">
@@ -457,8 +457,8 @@ const MenuPage = ({
                 onClick={() => setViewMode('grid')}
                 className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${
                   viewMode === 'grid'
-                    ? 'bg-asaka-500 text-white'
-                    : 'text-asaka-muted hover:text-white'
+                    ? 'bg-salmon-500 text-white'
+                    : 'text-champagne-muted hover:text-white'
                 }`}>
                 <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
                   <path fillRule="evenodd"
@@ -470,8 +470,8 @@ const MenuPage = ({
                 onClick={() => setViewMode('list')}
                 className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${
                   viewMode === 'list'
-                    ? 'bg-asaka-500 text-white'
-                    : 'text-asaka-muted hover:text-white'
+                    ? 'bg-salmon-500 text-white'
+                    : 'text-champagne-muted hover:text-white'
                 }`}>
                 <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
                   <path fillRule="evenodd"
@@ -493,8 +493,8 @@ const MenuPage = ({
         </div>
 
         <div className="flex justify-between items-center px-4 mb-2">
-          <span className="text-asaka-muted text-xs font-bold uppercase tracking-wider">Catégories</span>
-          <button onClick={() => setExpandCategories(!expandCategories)} className="text-asaka-500 text-xs font-medium hover:text-asaka-400 transition-colors">
+          <span className="text-champagne-muted text-xs font-bold uppercase tracking-wider">Catégories</span>
+          <button onClick={() => setExpandCategories(!expandCategories)} className="text-salmon-500 text-xs font-medium hover:text-asaka-400 transition-colors">
             {expandCategories ? 'Afficher en ligne' : 'Afficher tout'}
           </button>
         </div>
@@ -506,14 +506,14 @@ const MenuPage = ({
             className={`flex-shrink-0 flex items-center gap-1.5 px-3.5 py-2 rounded-xl
               text-xs font-bold transition-all duration-200 ${
               activeCategory === 'all'
-                ? 'bg-asaka-500 text-white shadow-glow-blue'
-                : 'glass-light text-asaka-muted hover:text-white'
+                ? 'bg-salmon-500 text-white shadow-glow-salmon'
+                : 'glass-light text-champagne-muted hover:text-white'
             }`}>
             🍽️ Tout
             <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${
               activeCategory === 'all'
                 ? 'bg-white/20 text-white'
-                : 'bg-asaka-700 text-asaka-muted'
+                : 'bg-obsidian-800 text-champagne-muted'
             }`}>
               {menuItems.length}
             </span>
@@ -528,8 +528,8 @@ const MenuPage = ({
                 className={`flex-shrink-0 flex items-center gap-1.5 px-3.5 py-2 rounded-xl
                   text-xs font-bold transition-all duration-200 ${
                   activeCategory === cat.id
-                    ? 'bg-asaka-500 text-white shadow-glow-blue'
-                    : 'glass-light text-asaka-muted hover:text-white'
+                    ? 'bg-salmon-500 text-white shadow-glow-salmon'
+                    : 'glass-light text-champagne-muted hover:text-white'
                 }`}>
                 {cat.image ? (
                   <img src={cat.image} alt="" className="w-5 h-5 rounded-full object-cover" />
@@ -539,7 +539,7 @@ const MenuPage = ({
                   <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${
                     activeCategory === cat.id
                       ? 'bg-white/20 text-white'
-                      : 'bg-asaka-700 text-asaka-muted'
+                      : 'bg-obsidian-800 text-champagne-muted'
                   }`}>
                     {count}
                   </span>
@@ -557,7 +557,7 @@ const MenuPage = ({
           <div className={`flex items-center justify-between mt-4 mb-2 px-4 py-3 rounded-2xl
             border text-sm font-semibold ${
             orderMode === 'takeaway'
-              ? 'bg-asaka-500/15 border-asaka-500/30 text-asaka-300'
+              ? 'bg-salmon-500/15 border-salmon-500/30 text-salmon-500'
               : 'bg-cyan-900/20 border-cyan-700/30 text-cyan-300'
           }`}>
             <span>
@@ -585,7 +585,7 @@ const MenuPage = ({
           <div className="text-center py-20">
             <div className="text-5xl mb-4">🔍</div>
             <div className="text-white font-bold text-lg">Aucun résultat</div>
-            <div className="text-asaka-muted text-sm mt-1">
+            <div className="text-champagne-muted text-sm mt-1">
               Essayez un autre terme de recherche
             </div>
             <button onClick={() => setSearch('')}
@@ -606,9 +606,9 @@ const MenuPage = ({
               )}
               <div>
                 <h2 className="text-white font-black text-lg leading-none">{group.name}</h2>
-                <p className="text-asaka-muted text-xs mt-0.5">{group.items.length} plats</p>
+                <p className="text-champagne-muted text-xs mt-0.5">{group.items.length} plats</p>
               </div>
-              <div className="flex-1 h-px bg-asaka-700/40 ml-2" />
+              <div className="flex-1 h-px bg-obsidian-800/40 ml-2" />
             </div>
 
             {/* Items */}
@@ -648,7 +648,7 @@ const MenuPage = ({
           <button
             onClick={() => navigate('cart')}
             className="pointer-events-auto btn-primary px-6 py-4 flex items-center gap-4
-              rounded-2xl shadow-glow-blue min-w-[240px] justify-between
+              rounded-2xl shadow-glow-salmon min-w-[240px] justify-between
               animate-scale-in">
             <div className="flex items-center gap-2">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"

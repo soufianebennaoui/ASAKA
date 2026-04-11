@@ -396,7 +396,10 @@ const CustomerAuth = ({ mode, setMode, onLogin, onSignup, onClose, frontCustomer
           ref={panelRef}
           className="bg-asaka-800 border border-asaka-600/40 rounded-t-3xl sm:rounded-3xl
             w-full sm:max-w-md mx-auto overflow-y-auto max-h-[92vh] sm:max-h-[90vh]"
-          style={{ animation: 'slideUp 0.35s cubic-bezier(0.34,1.2,0.64,1) forwards' }}
+          style={{
+            animation: 'slideUp 0.35s cubic-bezier(0.34,1.2,0.64,1) forwards',
+            paddingBottom: 'calc(env(safe-area-inset-bottom) + 72px)',
+          }}
           {...panelDragProps}>
 
           {/* Handle — drag to dismiss on mobile */}
@@ -405,27 +408,44 @@ const CustomerAuth = ({ mode, setMode, onLogin, onSignup, onClose, frontCustomer
           </div>
 
           <div className="px-6 py-5">
-            {/* Header */}
-            <div className="flex items-start justify-between mb-6">
-              <div>
-                <h2 className="text-white font-black text-xl">
-                  {isLogin ? 'Connexion' : 'Créer un compte'}
-                </h2>
-                <p className="text-asaka-muted text-sm mt-0.5">
-                  {isLogin
-                    ? 'Accédez à votre espace fidélité'
-                    : `Profitez de ${ACCOUNT_DISCOUNT}% de réduction dès la 1ère commande`}
-                </p>
+            {/* ── Mode Tabs — always visible at top ── */}
+            <div className="flex items-center justify-between mb-5">
+              <div className="flex-1 flex bg-asaka-900/60 rounded-2xl p-1 gap-1">
+                <button
+                  onClick={() => { setMode('login'); setErrors({}); }}
+                  className={`flex-1 py-2.5 rounded-xl text-sm font-bold transition-all ${
+                    isLogin
+                      ? 'bg-asaka-500 text-white shadow-glow-blue'
+                      : 'text-asaka-muted hover:text-white'
+                  }`}>
+                  Connexion
+                </button>
+                <button
+                  onClick={() => { setMode('signup'); setErrors({}); }}
+                  className={`flex-1 py-2.5 rounded-xl text-sm font-bold transition-all ${
+                    !isLogin
+                      ? 'bg-asaka-500 text-white shadow-glow-blue'
+                      : 'text-asaka-muted hover:text-white'
+                  }`}>
+                  S'inscrire
+                </button>
               </div>
               <button onClick={onClose}
-                className="w-9 h-9 rounded-xl glass-light flex items-center justify-center
-                  text-asaka-muted hover:text-white transition-colors">
+                className="ml-3 w-9 h-9 rounded-xl glass-light flex items-center justify-center
+                  text-asaka-muted hover:text-white transition-colors flex-shrink-0">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
                   className="w-5 h-5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/>
                 </svg>
               </button>
             </div>
+
+            {/* Subtitle */}
+            <p className="text-asaka-muted text-sm mb-5">
+              {isLogin
+                ? 'Accédez à votre espace fidélité'
+                : `Profitez de ${ACCOUNT_DISCOUNT}% de réduction dès la 1ère commande 🎉`}
+            </p>
 
             {/* Discount teaser (signup only) */}
             {!isLogin && (
@@ -843,15 +863,6 @@ const CustomerAuth = ({ mode, setMode, onLogin, onSignup, onClose, frontCustomer
               )}
             </button>
 
-            {/* Switch mode */}
-            <p className="text-center text-asaka-muted text-sm mt-4">
-              {isLogin ? "Pas encore de compte ?" : "Déjà un compte ?"}
-              {' '}
-              <button onClick={() => { setMode(isLogin ? 'signup' : 'login'); setErrors({}); }}
-                className="text-asaka-300 font-bold hover:text-white transition-colors">
-                {isLogin ? "S'inscrire" : "Se connecter"}
-              </button>
-            </p>
           </div>
         </div>
       </div>

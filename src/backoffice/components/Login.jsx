@@ -48,7 +48,8 @@ const Login = ({ usersData = [], onLogin, onGoToWebsite }) => {
         </div>
 
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-          <div className="bg-asaka-800/60 backdrop-blur-md py-8 px-4 shadow-xl sm:rounded-2xl sm:px-10 border border-asaka-700/50">
+          <div className="bg-asaka-800/60 backdrop-blur-md py-8 px-4 shadow-xl sm:rounded-2xl sm:px-10 border border-asaka-700/50"
+               style={{ background: 'rgba(13,27,42,0.85)' }}>
             <form className="space-y-6" onSubmit={handleSubmit}>
               <div>
                 <label className="block text-sm font-medium text-asaka-muted">
@@ -63,7 +64,8 @@ const Login = ({ usersData = [], onLogin, onGoToWebsite }) => {
                     required
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    className="block w-full pl-10 pr-3 py-3 border border-asaka-700/50 rounded-xl focus:ring-asaka-300/30 focus:border-asaka-300/60 bg-asaka-900 text-white sm:text-sm transition-colors outline-none placeholder:text-asaka-muted"
+                    className="block w-full pl-10 pr-3 py-3 border border-asaka-700/50 rounded-xl focus:ring-asaka-300/30 focus:border-asaka-300/60 sm:text-sm transition-colors outline-none"
+                    style={{ background: '#060d18', color: '#ffffff' }}
                     placeholder="Enter your name"
                   />
                 </div>
@@ -82,7 +84,8 @@ const Login = ({ usersData = [], onLogin, onGoToWebsite }) => {
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="block w-full pl-10 pr-10 py-3 border border-asaka-700/50 rounded-xl focus:ring-asaka-300/30 focus:border-asaka-300/60 bg-asaka-900 text-white sm:text-sm transition-colors outline-none placeholder:text-asaka-muted"
+                    className="block w-full pl-10 pr-10 py-3 border border-asaka-700/50 rounded-xl focus:ring-asaka-300/30 focus:border-asaka-300/60 sm:text-sm transition-colors outline-none"
+                    style={{ background: '#060d18', color: '#ffffff' }}
                     placeholder="••••••••"
                   />
                   <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
