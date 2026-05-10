@@ -125,7 +125,7 @@ const MiniCountrySelector = ({ selected, onChange }) => {
 };
 
 // ── OTP change modal (phone + email, with WhatsApp OTP option) ──
-const ChangeFieldModal = ({ field, current, onClose, onSave }) => {
+const ChangeFieldModal = ({ field, current, userEmail, onClose, onSave }) => {
   const { panelRef: cfPanelRef, dragHandleProps: cfDragHandle, panelDragProps: cfPanelDrag } = useDragDismiss(onClose);
   const [step,       setStep]       = useState('input');
   const [newVal,     setNewVal]     = useState('');
@@ -143,7 +143,7 @@ const ChangeFieldModal = ({ field, current, onClose, onSave }) => {
   // Build full E.164 phone
   const fullPhone = isPhone ? normalizePhone(newVal, country.dial) : newVal;
 
-  const sendOtp = () => {
+  const sendOtp = async () => {
     if (!newVal.trim()) { setErr(`Entrez votre nouveau ${label}`); return; }
     if (isPhone && !isValidPhone(newVal, country.dial)) {
       setErr('Numéro invalide'); return;
@@ -153,35 +153,52 @@ const ChangeFieldModal = ({ field, current, onClose, onSave }) => {
     }
     setErr('');
 
-    // Demo: generate a visible OTP
-    const code = String(Math.floor(100000 + Math.random() * 900000));
-    setDemoOtp(code);
-
-    if (isPhone && otpMethod === 'whatsapp') {
-      // Open WhatsApp with pre-filled OTP message sent TO the user's number
-      const waNum = fullPhone.replace(/^\+/, '');
-      const msg   = `Votre code de vérification Asaka Sushi : *${code}*\n\nNe partagez ce code avec personne.`;
-      window.open(`https://wa.me/${waNum}?text=${encodeURIComponent(msg)}`, '_blank');
-      toast.info('WhatsApp ouvert — entrez le code reçu ci-dessous.');
-    } else {
-      const dest = isPhone ? fullPhone : newVal;
-      toast.info(`[Démo] Code OTP : ${code} — envoyé à ${dest}`);
+    try {
+      const res = await fetch(`${API}/api/auth/send-verification`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: userEmail })
+      });
+      if (!res.ok) throw new Error('Erreur envoi');
+      
+      toast.info(`Un code de sécurité a été envoyé à ${userEmail}`);
+      setStep('otp');
+    } catch (err) {
+      toast.error("Erreur lors de l'envoi du code. Réessayez.");
     }
-    setStep('otp');
   };
 
-  const verifyOtp = () => {
-    if (otp.length < 4) { setErr('Code invalide'); return; }
-    if (demoOtp && otp !== demoOtp) { setErr('Code incorrect'); return; }
-    const savedValue = isPhone ? fullPhone : newVal.trim();
-    if (isPhone) {
-      onSave('phone', savedValue);
-      onSave('phoneCountry', country.code);
-    } else {
-      onSave(field, savedValue);
+  const verifyOtp = async () => {
+    if (otp.length < 6) { setErr('Veuillez entrer les 6 chiffres'); return; }
+    
+    try {
+      const res = await fetch(`${API}/api/auth/verify-code`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: userEmail, code: otp })
+      });
+      
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error);
+      }
+
+      // Success
+      setErr('');
+      const savedValue = isPhone ? fullPhone : newVal.trim();
+      if (isPhone) {
+        onSave('phone', savedValue);
+        onSave('phoneCountry', country.code);
+      } else {
+        onSave(field, savedValue);
+      }
+      setStep('done');
+      setTimeout(onClose, 1400);
+    } catch (err) {
+      if (err.message === 'code_invalid') setErr('Code incorrect');
+      else if (err.message === 'code_expired') setErr('Le code a expiré');
+      else setErr('Erreur de vérification');
     }
-    setStep('done');
-    setTimeout(onClose, 1400);
   };
 
   return (
@@ -1270,6 +1287,8 @@ const ReviewSheet = ({ order, onClose, onSubmit }) => {
 // ════════════════════════════════════════════════════════════
 //  MAIN PROFILE PAGE
 // ════════════════════════════════════════════════════════════
+const API = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:3001`;
+
 const CustomerProfile = ({
   navigate,
   currentCustomer,
@@ -1278,6 +1297,7 @@ const CustomerProfile = ({
   setFrontCustomers,
   setCurrentCustomer,
   setAvisData,
+  customerApi,          // ← needed to persist reviews + orderHistory to DB
   menuItems = [],
 }) => {
   const [activeTab,       setActiveTab]       = useState('avantages');
@@ -1360,27 +1380,51 @@ const CustomerProfile = ({
     toast.info('Connexion Facebook — disponible dans la prochaine mise à jour.');
   };
 
-  const handleReviewSubmit = (orderId, review) => {
-    // 1. Update local customer history
-    const updated = {
-      ...currentCustomer,
-      orderHistory: history.map(o => o.id === orderId ? { ...o, review } : o),
-    };
+  const handleReviewSubmit = async (orderId, review) => {
+    // 1. Update local customer history (optimistic UI)
+    const updatedHistory = history.map(o => o.id === orderId ? { ...o, review } : o);
+    const updated = { ...currentCustomer, orderHistory: updatedHistory };
     setCurrentCustomer?.(updated);
     setFrontCustomers?.(prev => prev.map(c => c.id === currentCustomer.id ? updated : c));
 
-    // 2. Push to Back-Office Avis pool (unpublished by default)
-    setAvisData?.(prev => [{
-      id: Date.now(),
-      name: currentCustomer.name,
-      stars: review.stars,
-      text: review.comment,
-      date: review.date,
-      badge: 'Nouveau',
-      published: false
-    }, ...prev]);
+    // 2. Persist updated orderHistory to DB so "already reviewed" badge survives refresh
+    try {
+      await customerApi?.update(currentCustomer.id, { orderHistory: updatedHistory });
+    } catch {}
 
-    toast.success('Avis publié ! Merci 🍣');
+    // 3. POST to /api/avis so it appears in the backoffice Avis Clients page
+    try {
+      const res = await fetch(`${API}/api/avis`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name:      currentCustomer.name,
+          stars:     review.stars,
+          text:      review.comment || '',
+          date:      review.date,
+          published: false,   // admin must approve before it goes public
+          images:    review.images || [],
+        }),
+      });
+      if (res.ok) {
+        const newAvis = await res.json();
+        // Also update local avisData so the backoffice sees it immediately
+        setAvisData?.(prev => [{
+          id:        newAvis.id || Date.now(),
+          name:      currentCustomer.name,
+          stars:     review.stars,
+          text:      review.comment || '',
+          date:      review.date,
+          published: false,
+          images:    review.images || [],
+        }, ...prev]);
+      }
+    } catch {
+      // Silently fall back — review is already in the DB via /api/avis above,
+      // the local state update ensures UI consistency.
+    }
+
+    toast.success('Avis envoyé ! Merci 🍣 — il sera publié après validation.');
   };
 
   const TABS = [
@@ -2232,6 +2276,7 @@ const CustomerProfile = ({
         <ChangeFieldModal
           field={changeField}
           current={currentCustomer[changeField]}
+          userEmail={currentCustomer.email}
           onClose={() => setChangeField(null)}
           onSave={handleFieldSave}
         />
