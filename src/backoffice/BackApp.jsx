@@ -28,9 +28,14 @@ const BackApp = ({
   menuItems,     setMenuItems,
   categories,    setCategories,
 }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [activeTab, setActiveTab]             = useState('dashboard');
-  const [isSidebarOpen, setIsSidebarOpen]     = useState(false);
+  // ── Auth — persisted to localStorage so refresh keeps admin logged in ──
+  const [currentStaff,    setCurrentStaff]    = useState(() => {
+    try { return JSON.parse(localStorage.getItem('asaka_staff_session') || 'null'); } catch { return null; }
+  });
+  const isAuthenticated = !!currentStaff;
+
+  const [activeTab,    setActiveTab]    = useState('dashboard');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [theme, setTheme] = useState(() => localStorage.getItem('asaka_theme') || 'dark');
 
   useEffect(() => {
@@ -38,8 +43,17 @@ const BackApp = ({
     localStorage.setItem('asaka_theme', theme);
   }, [theme]);
 
-  const handleLogin  = () => setIsAuthenticated(true);
-  const toggleTheme  = () => setTheme(p => p === 'dark' ? 'light' : 'dark');
+  const handleLogin = (staffMember) => {
+    setCurrentStaff(staffMember);
+    try { localStorage.setItem('asaka_staff_session', JSON.stringify(staffMember)); } catch {}
+  };
+
+  const handleLogout = () => {
+    setCurrentStaff(null);
+    try { localStorage.removeItem('asaka_staff_session'); } catch {}
+  };
+
+  const toggleTheme = () => setTheme(p => p === 'dark' ? 'light' : 'dark');
 
   // ── Order notifications ───────────────────────────────────
   const { unseenCount, toasts, dismissToast } = useOrderNotifications(
@@ -84,12 +98,14 @@ const BackApp = ({
           onClose={() => setIsSidebarOpen(false)}
         />
         <div className="flex-1 flex flex-col h-screen overflow-hidden">
-          <Header 
-            theme={theme} 
-            toggleTheme={toggleTheme} 
-            unseenCount={unseenCount} 
-            onOpenOrders={() => setActiveTab('orders')} 
+          <Header
+            theme={theme}
+            toggleTheme={toggleTheme}
+            unseenCount={unseenCount}
+            onOpenOrders={() => setActiveTab('orders')}
             onToggleSidebar={() => setIsSidebarOpen(true)}
+            currentStaff={currentStaff}
+            onLogout={handleLogout}
           />
           <main className="flex-1 overflow-x-hidden overflow-y-auto bg-asaka-950 p-4 md:p-6">
             <div className="max-w-7xl mx-auto">{renderContent()}</div>
