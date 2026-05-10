@@ -381,18 +381,9 @@ const UnifiedCheckout = ({
       return;
     }
 
-    // For logged-in customers use their profile data directly so that
-    // any pre-filled values they cannot edit don't fail form validation.
-    const effectiveName  = currentCustomer
-      ? (currentCustomer.name  || '')
-      : form.name;
-    const effectivePhone = currentCustomer
-      ? (currentCustomer.phone || '')
-      : form.phone;
-
     const cleaned = {
-      name:       sanitize(effectiveName,  80),
-      phone:      sanitize(effectivePhone, 30),
+      name:       sanitize(form.name,  80),
+      phone:      sanitize(form.phone, 30),
       address:    sanitize(form.address,  200),
       gpsLink:    sanitize(form.gpsLink,  300),
       pickupTime: form.pickupTime,   // ← was missing — caused "créneau requis" even when set
@@ -403,11 +394,6 @@ const UnifiedCheckout = ({
       { ...cleaned, hasGps: !!cleaned.gpsLink },
       schema,
     );
-
-    // Logged-in user with no phone on their profile → point to profile page
-    if (currentCustomer && !cleaned.phone) {
-      errs.phone = 'Numéro de téléphone manquant — ajoutez-le dans votre profil';
-    }
 
     // Delivery: need address OR GPS
     if (isDelivery && !cleaned.gpsLink && cleaned.address.length < 10) {
@@ -471,12 +457,12 @@ const UnifiedCheckout = ({
     setShowWaModal(true);
   };
 
-  const confirmOrder = () => {
+  const confirmOrder = async () => {
     if (!pendingOrder || submitting) return;
     setSubmitting(true);
     setShowWaModal(false);
     try {
-      placeOrder({
+      await placeOrder({
         tip:           form.tip,
         paymentMethod: form.paymentMethod,
         pointsUsed:    form.pointsUsed,
@@ -498,11 +484,6 @@ const UnifiedCheckout = ({
   // Field class helper — highlights the input border red when there's an error
   const fc = (field) =>
     `input-asaka ${errors[field] ? 'border-red-500/70 focus:border-red-500 bg-red-950/10' : ''}`;
-
-  // Phone display for the customer info card
-  const phoneDisplay = currentCustomer?.phone
-    ? `${getCountryFromPhone(currentCustomer.phone).flag} ${formatPhoneDisplay(currentCustomer.phone)}`
-    : form.phone || '—';
 
   const hasErrors = Object.values(errors).some(Boolean);
 
@@ -542,7 +523,7 @@ const UnifiedCheckout = ({
           {/* ── 1. Customer info card ─────────────────────── */}
           <div className="card-asaka p-5">
             <div className="flex items-center justify-between mb-4">
-              <SectionLabel step={S()} title="Vos informations" />
+              <SectionLabel step={S()} title="Informations de livraison" />
               {currentCustomer && (
                 <button onClick={() => navigate('profile')}
                   className="flex items-center gap-1.5 text-xs text-asaka-500
@@ -552,84 +533,66 @@ const UnifiedCheckout = ({
                     <path strokeLinecap="round" strokeLinejoin="round"
                       d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487z"/>
                   </svg>
-                  Modifier sur le profil
+                  Modifier le profil
                 </button>
               )}
             </div>
 
-            {currentCustomer ? (
-              /* Logged-in: show pre-filled info */
-              <div className="space-y-3">
-                <div className="flex items-center gap-3 py-2.5 px-3 rounded-xl bg-asaka-900/50
-                  border border-asaka-700/30">
-                  <span className="text-asaka-600 text-xs w-16 flex-shrink-0">Nom</span>
-                  <span className="text-white font-semibold text-sm">{currentCustomer.name}</span>
-                </div>
-                <div className={`flex items-center gap-3 py-2.5 px-3 rounded-xl border ${
-                  !currentCustomer.phone
-                    ? 'bg-red-950/20 border-red-700/40'
-                    : 'bg-asaka-900/50 border-asaka-700/30'
-                }`}>
-                  <span className="text-asaka-600 text-xs w-16 flex-shrink-0">Tél.</span>
-                  {currentCustomer.phone ? (
-                    <span className="text-white font-semibold text-sm">{phoneDisplay}</span>
-                  ) : (
-                    <button onClick={() => navigate('profile')}
-                      className="text-red-400 text-xs font-semibold underline hover:text-red-300
-                        transition-colors text-left">
-                      Numéro manquant — ajoutez-le dans votre profil
-                    </button>
-                  )}
-                </div>
-                {currentCustomer.email && (
-                  <div className="flex items-center gap-3 py-2.5 px-3 rounded-xl bg-asaka-900/50
-                    border border-asaka-700/30">
-                    <span className="text-asaka-600 text-xs w-16 flex-shrink-0">Email</span>
-                    <span className="text-white font-semibold text-sm truncate">
-                      {currentCustomer.email}
-                    </span>
-                  </div>
-                )}
-                <p className="text-asaka-700 text-[10px] px-1">
-                  Ces informations sont tirées de votre profil. Cliquez « Modifier sur le profil » pour les mettre à jour.
-                </p>
+            {/* Logged-in banner */}
+            {currentCustomer && (
+              <div className="flex items-start gap-2 px-3 py-2.5 rounded-xl mb-4
+                bg-asaka-500/10 border border-asaka-500/25 text-xs">
+                <span className="flex-shrink-0 mt-0.5">🛵</span>
+                <span className="text-asaka-400">
+                  Prérempli depuis votre profil.{' '}
+                  <span className="text-asaka-300 font-semibold">
+                    Modifiez librement pour cette commande
+                  </span>{' '}
+                  — commander pour un ami ? Entrez son nom et numéro.
+                </span>
               </div>
-            ) : (
-              /* Guest: editable fields */
-              <div className="space-y-4">
-                <div>
-                  <label className="text-asaka-muted text-xs font-semibold mb-1.5 block">
-                    Nom complet *
-                  </label>
-                  <input type="text" value={form.name}
-                    onChange={e => update('name', e.target.value)}
-                    placeholder="Votre prénom et nom"
-                    className={fc('name')} autoComplete="name" />
-                  <FieldError msg={errors.name} />
-                </div>
-                <div>
-                  <label className="text-asaka-muted text-xs font-semibold mb-1.5 block">
-                    Téléphone *
-                  </label>
-                  <input type="tel" value={form.phone}
-                    onChange={e => update('phone', e.target.value)}
-                    placeholder="06 77 88 99 66 ou +212677889966"
-                    className={fc('phone')} autoComplete="tel" />
-                  <FieldError msg={errors.phone} />
-                </div>
+            )}
+
+            {/* Always-editable fields */}
+            <div className="space-y-4">
+              <div>
+                <label className="text-asaka-muted text-xs font-semibold mb-1.5 block">
+                  Nom de livraison *
+                </label>
+                <input type="text" value={form.name}
+                  onChange={e => update('name', e.target.value)}
+                  placeholder="Prénom et nom"
+                  className={fc('name')}
+                  autoComplete="new-password"
+                  name="asaka-delivery-name" />
+                <FieldError msg={errors.name} />
+              </div>
+              <div>
+                <label className="text-asaka-muted text-xs font-semibold mb-1.5 block">
+                  Téléphone *
+                </label>
+                <input type="tel" value={form.phone}
+                  onChange={e => update('phone', e.target.value)}
+                  placeholder="06 77 88 99 66 ou +212677889966"
+                  className={fc('phone')}
+                  autoComplete="new-password"
+                  name="asaka-delivery-phone" />
+                <FieldError msg={errors.phone} />
+              </div>
+              {!currentCustomer && (
                 <div className="flex items-start gap-2 px-3 py-2.5 rounded-xl
                   bg-asaka-700/20 border border-asaka-700/30 text-xs text-asaka-600">
                   <span className="flex-shrink-0 mt-0.5">💡</span>
                   <span>
-                    Créez un compte pour sauvegarder vos infos et ne plus les ressaisir à chaque commande.
+                    Créez un compte pour sauvegarder vos infos et gagner des points fidélité.
                     {' '}<button onClick={() => navigate('profile')}
                       className="text-asaka-400 underline hover:text-asaka-200 transition-colors">
                       Créer un compte
                     </button>
                   </span>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
 
           {/* ── 2. Address (delivery only) ────────────────── */}
