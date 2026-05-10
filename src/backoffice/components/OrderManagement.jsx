@@ -187,10 +187,22 @@ const OrderRow = ({ order, onAdvance, onCancel }) => {
 
         {/* Customer + items */}
         <div className="flex-1 min-w-0">
-          <div className="font-semibold text-zinc-200 text-sm truncate">{order.customer}</div>
+          {/* Delivery recipient (may differ from account holder) */}
+          {order.deliveryName && order.deliveryName !== order.customer ? (
+            <>
+              <div className="font-semibold text-zinc-200 text-sm truncate">
+                🛵 {order.deliveryName}
+              </div>
+              <div className="text-xs text-zinc-500 mt-0.5 truncate">
+                Compte : {order.customer}
+              </div>
+            </>
+          ) : (
+            <div className="font-semibold text-zinc-200 text-sm truncate">{order.customer}</div>
+          )}
           <div className="text-xs text-zinc-500 mt-0.5 line-clamp-1">{order.items}</div>
-          {order.phone && (
-            <div className="text-xs text-zinc-500 mt-0.5">{order.phone}</div>
+          {(order.deliveryPhone || order.phone) && (
+            <div className="text-xs text-zinc-500 mt-0.5">{order.deliveryPhone || order.phone}</div>
           )}
         </div>
 
