@@ -106,6 +106,7 @@ export default function ActiveOrderBar({
   cancelOrder,
   navigate,
   onDismiss,
+  ordersLoaded,        // true once ordersData has been fetched from DB
 }) {
   // ── Countdown ─────────────────────────────────────────────
   const [secsLeft,         setSecsLeft]         = useState(0);
@@ -238,7 +239,9 @@ export default function ActiveOrderBar({
           {lastOrderId}
         </p>
         <p className="text-green-400 text-xs mt-0.5 truncate">
-          {stepLabel(lastOrderMode, lastOrderStep ?? 0)}
+          {ordersLoaded
+            ? stepLabel(lastOrderMode, lastOrderStep ?? 0)
+            : 'Chargement…'}
         </p>
       </div>
 
