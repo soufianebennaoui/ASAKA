@@ -1,34 +1,40 @@
 import React, { useState } from 'react';
 import { ChefHat, Lock, User, ArrowRight, Eye, EyeOff } from 'lucide-react';
 
-const Login = ({ usersData = [], onLogin, onGoToWebsite }) => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+const API = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:3001`;
+
+const Login = ({ onLogin, onGoToWebsite }) => {
+  const [username,     setUsername]     = useState('');
+  const [password,     setPassword]     = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState('');
+  const [error,        setError]        = useState('');
+  const [loading,      setLoading]      = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (username === 'Admin' && password === '123123123') {
-      setError('');
-      onLogin(username);
-      return;
-    }
-
-    const matchedUser = usersData.find(u => 
-      (u.name.toLowerCase() === username.toLowerCase() || u.email.toLowerCase() === username.toLowerCase()) 
-      && u.password === password
-    );
-
-    if (matchedUser) {
-      if (matchedUser.status === 'Inactive') {
-        setError('Ce compte est inactif.');
-      } else {
-        setError('');
-        onLogin(matchedUser.name);
+    setLoading(true);
+    setError('');
+    try {
+      const res = await fetch(`${API}/api/staff/login`, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ username, password }),
+      });
+      if (res.status === 401) {
+        setError('Nom ou mot de passe incorrect.');
+        return;
       }
-    } else {
-      setError('Invalid username or password');
+      if (!res.ok) throw new Error('server_error');
+      const staff = await res.json();
+      onLogin(staff);
+    } catch (err) {
+      if (err.message === 'server_error') {
+        setError('Erreur serveur. Vérifiez que le serveur est démarré.');
+      } else {
+        setError('Impossible de contacter le serveur.');
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -133,10 +139,11 @@ const Login = ({ usersData = [], onLogin, onGoToWebsite }) => {
               <div>
                 <button
                   type="submit"
-                  className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-asaka-500 hover:bg-asaka-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-asaka-500 transition-all group"
+                  disabled={loading}
+                  className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-asaka-500 hover:bg-asaka-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-asaka-500 transition-all group disabled:opacity-60 disabled:cursor-not-allowed"
                 >
-                  Sign in
-                  <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  {loading ? 'Connexion…' : 'Se connecter'}
+                  {!loading && <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />}
                 </button>
               </div>
             </form>
