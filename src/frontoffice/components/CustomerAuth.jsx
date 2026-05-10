@@ -14,6 +14,8 @@ import {
 } from '../../data/countryCodes';
 import { toast } from '../../utils/toast';
 
+const API = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:3001`;
+
 // ── Google Identity Services loader ─────────────────────────
 const GOOGLE_CLIENT_ID   = import.meta.env?.VITE_GOOGLE_CLIENT_ID   || '';
 const FACEBOOK_APP_ID    = import.meta.env?.VITE_FACEBOOK_APP_ID    || '';
@@ -146,7 +148,7 @@ const CountrySelector = ({ selected, onChange }) => {
 // ── Main Auth Component ───────────────────────────────────
 const CustomerAuth = ({ mode, setMode, onLogin, onSignup, onClose, frontCustomers = [] }) => {
   const { panelRef, dragHandleProps, panelDragProps } = useDragDismiss(onClose);
-  const [form, setForm]           = useState({ name: '', email: '', phone: '', password: '' });
+  const [form, setForm]           = useState({ name: '', identifier: '', email: '', phone: '', password: '' });
   const [country, setCountry]     = useState(DEFAULT_COUNTRY); // Morocco default
   const [errors, setErrors]       = useState({});
   const [showPass, setShowPass]   = useState(false);
@@ -195,6 +197,30 @@ const CustomerAuth = ({ mode, setMode, onLogin, onSignup, onClose, frontCustomer
     });
   }, [gsiReady, isLogin]);
 
+  // ── Unified OAuth Handler ─────────────────────────────────
+  const handleOAuthSubmit = async (payload) => {
+    try {
+      const res = await fetch(`${API}/api/auth/oauth`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+
+      if (res.status === 201) {
+        toast.success('Compte connecté ! Bienvenue 🍣');
+        onLogin(data); // Auto-login new user
+      } else {
+        toast.success(`Bon retour, ${data.name} ! 🍣`);
+        onLogin(data);
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error('Erreur lors de la connexion sociale');
+    }
+  };
+
   // ── Facebook ─────────────────────────────────────────────
   const handleFacebookLogin = async () => {
     if (fbLoading) return;
@@ -205,19 +231,14 @@ const CustomerAuth = ({ mode, setMode, onLogin, onSignup, onClose, frontCustomer
       if (!FB) { toast.error('SDK Facebook non disponible'); setFbLoading(false); return; }
       FB.login((response) => {
         if (response.authResponse) {
-          FB.api('/me', { fields: 'name,email,id' }, (userData) => {
-            const { name, email, id: facebookId } = userData;
-            const existing = frontCustomers.find(
-              c => c.email?.toLowerCase() === email?.toLowerCase() || c.facebookId === facebookId,
-            );
-            if (existing) {
-              onLogin({ ...existing, facebookId });
-              toast.success(`Bon retour, ${existing.name} ! 🍣`);
-            } else {
-              onSignup({ name: name || 'Client Asaka', email: email || '', phone: '', facebookId,
-                phoneCountry: DEFAULT_COUNTRY.code });
-              toast.success('Compte Facebook connecté ! Bienvenue 🍣');
-            }
+          FB.api('/me', { fields: 'name,email,id,picture' }, (userData) => {
+            handleOAuthSubmit({
+              provider: 'facebook',
+              oauth_id: userData.id,
+              email: userData.email || `${userData.id}@facebook.local`,
+              name: userData.name,
+              picture: userData.picture?.data?.url
+            });
           });
         } else { toast.error('Connexion Facebook annulée'); }
         setFbLoading(false);
@@ -229,16 +250,14 @@ const CustomerAuth = ({ mode, setMode, onLogin, onSignup, onClose, frontCustomer
   const handleGoogleCredential = (response) => {
     const payload = decodeGoogleToken(response.credential);
     if (!payload) { toast.error('Authentification Google échouée'); return; }
-    const { email, name, sub: googleId } = payload;
-    const existing = frontCustomers.find(c => c.email?.toLowerCase() === email?.toLowerCase());
-    if (existing) {
-      onLogin({ ...existing, googleId });
-      toast.success(`Bon retour, ${existing.name} ! 🍣`);
-    } else {
-      onSignup({ name: name || email.split('@')[0], email, phone: '', googleId,
-        phoneCountry: DEFAULT_COUNTRY.code });
-      toast.success('Compte Google connecté ! Bienvenue 🍣');
-    }
+    
+    handleOAuthSubmit({
+      provider: 'google',
+      oauth_id: payload.sub,
+      email: payload.email,
+      name: payload.name,
+      picture: payload.picture
+    });
   };
 
   const update = (f, v) => {
@@ -322,19 +341,24 @@ const CustomerAuth = ({ mode, setMode, onLogin, onSignup, onClose, frontCustomer
 
   const validate = () => {
     const errs = {};
-    if (!isLogin && !sanitize(form.name, 80).trim()) errs.name = 'Nom requis';
-    if (!sanitize(form.email, 100).trim())                 errs.email = 'Email requis';
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) errs.email = 'Email invalide';
-    if (!form.phone.trim()) {
-      errs.phone = 'Téléphone requis';
-    } else if (!isValidPhone(form.phone, country.dial)) {
-      errs.phone = `Numéro invalide pour ${country.name}`;
+    if (isLogin) {
+      if (!form.identifier.trim()) errs.identifier = 'Email ou téléphone requis';
+      if (!form.password || form.password.length < 6) errs.password = 'Mot de passe (min 6 car.)';
+    } else {
+      if (!sanitize(form.name, 80).trim()) errs.name = 'Nom requis';
+      if (!sanitize(form.email, 100).trim())                 errs.email = 'Email requis';
+      else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) errs.email = 'Email invalide';
+      if (!form.phone.trim()) {
+        errs.phone = 'Téléphone requis';
+      } else if (!isValidPhone(form.phone, country.dial)) {
+        errs.phone = `Numéro invalide pour ${country.name}`;
+      }
+      if (!form.password || form.password.length < 6) errs.password = 'Mot de passe (min 6 car.)';
     }
-    if (!form.password || form.password.length < 6) errs.password = 'Mot de passe (min 6 car.)';
     return errs;
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (loading) return;
     if (!rateLimiter.check('auth', 5, 60000)) {
       toast.error('Trop de tentatives. Réessayez dans 1 minute.');
@@ -344,39 +368,45 @@ const CustomerAuth = ({ mode, setMode, onLogin, onSignup, onClose, frontCustomer
     if (Object.keys(errs).length > 0) { setErrors(errs); return; }
 
     setLoading(true);
-    const email     = sanitize(form.email, 100).toLowerCase();
-    const fullPhone = getFullPhone();
 
-    setTimeout(() => {
-      if (isLogin) {
-        const found = frontCustomers.find(
-          c => c.email?.toLowerCase() === email && c.password === form.password,
-        );
-        if (found) {
-          onLogin(found);
-          toast.success(`Bon retour, ${found.name} !`);
-        } else {
-          setErrors({ email: 'Email ou mot de passe incorrect' });
-          setLoading(false);
-        }
-      } else {
-        const exists = frontCustomers.some(c => c.email?.toLowerCase() === email);
-        if (exists) {
-          setErrors({ email: 'Un compte existe déjà avec cet email' });
-          setLoading(false);
+    if (isLogin) {
+      // ── API login ──────────────────────────────────────────
+      try {
+        const res = await fetch(`${API}/api/customers/login`, {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({ identifier: form.identifier.trim(), password: form.password }),
+        });
+        if (res.status === 401) {
+          setErrors({ identifier: 'Identifiant ou mot de passe incorrect' });
           return;
         }
-        onSignup({
-          name:           sanitize(form.name, 80),
-          email,
-          phone:          fullPhone,              // stored as E.164
-          phoneCountry:   country.code,           // ISO code, e.g. 'MA'
-          password:       form.password,
-          savedAddresses: buildSignupAddresses(), // typed + GPS-approved addresses
-        });
-        toast.success('Compte créé ! Bienvenue chez Asaka Sushi 🍣');
+        if (!res.ok) throw new Error('server_error');
+        const customer = await res.json();
+        onLogin(customer);
+        toast.success(`Bon retour, ${customer.name} !`);
+      } catch (err) {
+        setErrors({ identifier: err.message === 'server_error'
+          ? 'Erreur serveur. Réessayez.'
+          : 'Impossible de contacter le serveur.' });
+      } finally {
+        setLoading(false);
       }
-    }, 600);
+    } else {
+      // ── Signup — delegate to FrontApp (which calls customerApi.create) ──
+      const email     = sanitize(form.email, 100).toLowerCase();
+      const fullPhone = getFullPhone();
+      onSignup({
+        name:           sanitize(form.name, 80),
+        email,
+        phone:          fullPhone,
+        phoneCountry:   country.code,
+        password:       form.password,
+        savedAddresses: buildSignupAddresses(),
+      });
+      // toast shown by FrontApp after the async API call succeeds
+      setLoading(false);
+    }
   };
 
   // ── Phone input placeholder ────────────────────────────
@@ -533,62 +563,84 @@ const CustomerAuth = ({ mode, setMode, onLogin, onSignup, onClose, frontCustomer
 
             {/* Fields */}
             <div className="space-y-4">
-              {!isLogin && (
+              {/* ── LOGIN: single identifier field ── */}
+              {isLogin && (
                 <div>
                   <label className="text-asaka-muted text-xs font-semibold mb-1.5 block">
-                    Nom complet *
+                    Email ou téléphone *
                   </label>
-                  <input type="text" value={form.name}
-                    onChange={e => update('name', e.target.value)}
-                    placeholder="Votre prénom et nom"
-                    className={`input-asaka ${errors.name ? 'border-red-500/60' : ''}`}
-                    autoComplete="name" />
-                  {errors.name && <p className="text-red-400 text-xs mt-1">{errors.name}</p>}
+                  <input
+                    type="text"
+                    value={form.identifier}
+                    onChange={e => update('identifier', e.target.value)}
+                    placeholder="votre@email.com ou 0677889966"
+                    className={`input-asaka ${errors.identifier ? 'border-red-500/60' : ''}`}
+                    autoComplete="username"
+                    autoFocus
+                  />
+                  {errors.identifier && <p className="text-red-400 text-xs mt-1">{errors.identifier}</p>}
                 </div>
               )}
 
-              <div>
-                <label className="text-asaka-muted text-xs font-semibold mb-1.5 block">
-                  Email *
-                </label>
-                <input type="email" value={form.email}
-                  onChange={e => update('email', e.target.value)}
-                  placeholder="votre@email.com"
-                  className={`input-asaka ${errors.email ? 'border-red-500/60' : ''}`}
-                  autoComplete="email" />
-                {errors.email && <p className="text-red-400 text-xs mt-1">{errors.email}</p>}
-              </div>
+              {/* ── SIGNUP: name + email + phone ── */}
+              {!isLogin && (
+                <>
+                  <div>
+                    <label className="text-asaka-muted text-xs font-semibold mb-1.5 block">
+                      Nom complet *
+                    </label>
+                    <input type="text" value={form.name}
+                      onChange={e => update('name', e.target.value)}
+                      placeholder="Votre prénom et nom"
+                      className={`input-asaka ${errors.name ? 'border-red-500/60' : ''}`}
+                      autoComplete="name" />
+                    {errors.name && <p className="text-red-400 text-xs mt-1">{errors.name}</p>}
+                  </div>
 
-              {/* Phone field with country code selector */}
-              <div>
-                <label className="text-asaka-muted text-xs font-semibold mb-1.5 block">
-                  Téléphone *
-                </label>
-                <div className={`flex rounded-xl border overflow-visible ${
-                  errors.phone ? 'border-red-500/60' : 'border-asaka-700/50'
-                }`}>
-                  <CountrySelector selected={country} onChange={c => {
-                    setCountry(c);
-                    setErrors(prev => ({ ...prev, phone: '' }));
-                  }} />
-                  <input
-                    type="tel"
-                    value={form.phone}
-                    onChange={e => update('phone', e.target.value)}
-                    placeholder={getPhonePlaceholder()}
-                    className="flex-1 bg-transparent px-3 py-2.5 text-white text-sm
-                      placeholder:text-asaka-700 outline-none rounded-r-xl min-w-0"
-                    autoComplete="tel-national"
-                  />
-                </div>
-                {/* Morocco format hints */}
-                {country.code === 'MA' && (
-                  <p className="text-asaka-700 text-[10px] mt-1">
-                    Formats acceptés : 0677889966 · 00212677889966 · +212677889966
-                  </p>
-                )}
-                {errors.phone && <p className="text-red-400 text-xs mt-1">{errors.phone}</p>}
-              </div>
+                  <div>
+                    <label className="text-asaka-muted text-xs font-semibold mb-1.5 block">
+                      Email *
+                    </label>
+                    <input type="email" value={form.email}
+                      onChange={e => update('email', e.target.value)}
+                      placeholder="votre@email.com"
+                      className={`input-asaka ${errors.email ? 'border-red-500/60' : ''}`}
+                      autoComplete="email" />
+                    {errors.email && <p className="text-red-400 text-xs mt-1">{errors.email}</p>}
+                  </div>
+
+                  {/* Phone field with country code selector */}
+                  <div>
+                    <label className="text-asaka-muted text-xs font-semibold mb-1.5 block">
+                      Téléphone *
+                    </label>
+                    <div className={`flex rounded-xl border overflow-visible ${
+                      errors.phone ? 'border-red-500/60' : 'border-asaka-700/50'
+                    }`}>
+                      <CountrySelector selected={country} onChange={c => {
+                        setCountry(c);
+                        setErrors(prev => ({ ...prev, phone: '' }));
+                      }} />
+                      <input
+                        type="tel"
+                        value={form.phone}
+                        onChange={e => update('phone', e.target.value)}
+                        placeholder={getPhonePlaceholder()}
+                        className="flex-1 bg-transparent px-3 py-2.5 text-white text-sm
+                          placeholder:text-asaka-700 outline-none rounded-r-xl min-w-0"
+                        autoComplete="tel-national"
+                      />
+                    </div>
+                    {/* Morocco format hints */}
+                    {country.code === 'MA' && (
+                      <p className="text-asaka-700 text-[10px] mt-1">
+                        Formats acceptés : 0677889966 · 00212677889966 · +212677889966
+                      </p>
+                    )}
+                    {errors.phone && <p className="text-red-400 text-xs mt-1">{errors.phone}</p>}
+                  </div>
+                </>
+              )}
 
               <div>
                 <label className="text-asaka-muted text-xs font-semibold mb-1.5 block">
