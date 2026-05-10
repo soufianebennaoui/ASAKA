@@ -195,9 +195,12 @@ export function buildOrderPayload({
     // Items (snapshot)
     items:         cart,
     itemsLabel:    cart.map(c => `${c.qty}x ${c.item.name}`).join(', '),
-    // Customer
+    // Account holder (for loyalty points & CRM tracking)
     customer:      currentCustomer,
     customerName:  currentCustomer ? currentCustomer.name : (extra.name || 'Client'),
+    // Delivery recipient — may differ from account holder (e.g. "ordering for a friend")
+    deliveryName:  extra.name  || (currentCustomer ? currentCustomer.name : 'Client'),
+    deliveryPhone: extra.phone || (currentCustomer ? currentCustomer.phone : ''),
     // Form fields
     extra,
     paymentMethod,
