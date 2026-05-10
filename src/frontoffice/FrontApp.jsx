@@ -15,6 +15,7 @@ import OrderConfirmation from './components/OrderConfirmation';
 import CustomerAuth from './components/CustomerAuth';
 import CustomerProfile from './components/CustomerProfile';
 import Footer from './components/Footer';
+import ActiveOrderBar from './components/ActiveOrderBar';
 import EntreNous from './components/EntreNous';
 import FidelitePage from './components/FidelitePage';
 import { ToastContainer } from '../utils/toast';
@@ -43,12 +44,72 @@ const ImageLightbox = ({ image, onClose }) => {
   );
 };
 
+// ── Welcome screen shown right after account creation ────────
+const WelcomeScreen = ({ customer, onDismiss, onOrder }) => {
+  useEffect(() => {
+    const t = setTimeout(onDismiss, 4000);
+    return () => clearTimeout(t);
+  }, [onDismiss]);
+
+  return (
+    <div
+      className="fixed inset-0 z-[80] flex items-center justify-center px-6"
+      style={{ background: 'rgba(3,9,20,0.92)', backdropFilter: 'blur(8px)' }}
+      onClick={onDismiss}
+    >
+      <div
+        className="bg-asaka-800 border border-asaka-600/40 rounded-3xl px-8 py-10
+          max-w-sm w-full text-center shadow-2xl"
+        style={{ animation: 'slideUp 0.4s cubic-bezier(0.34,1.2,0.64,1) both' }}
+        onClick={e => e.stopPropagation()}
+      >
+        <div className="text-6xl mb-4">🎉</div>
+        <h2 className="text-white font-black text-2xl mb-2">
+          Bienvenue, {customer.name.split(' ')[0]} !
+        </h2>
+        <p className="text-asaka-400 text-sm mb-1">Votre compte Asaka est créé.</p>
+        {(customer.coupons || []).length > 0 && (
+          <p className="text-asaka-300 text-xs font-semibold mt-2 mb-5 px-4 py-2 rounded-xl
+            bg-asaka-500/10 border border-asaka-500/25">
+            🎟️ Un coupon de bienvenue vous attend dans votre profil !
+          </p>
+        )}
+        <div className="flex flex-col gap-2 mt-5">
+          <button
+            onClick={onOrder}
+            className="btn-primary w-full py-3 text-sm font-bold"
+          >
+            Commander maintenant 🍣
+          </button>
+          <button
+            onClick={onDismiss}
+            className="text-asaka-600 text-xs hover:text-asaka-400 transition-colors py-1"
+          >
+            Continuer à explorer
+          </button>
+        </div>
+        {/* Progress bar auto-dismiss */}
+        <div className="mt-4 h-0.5 bg-asaka-700/50 rounded-full overflow-hidden">
+          <div
+            className="h-full bg-asaka-500 rounded-full"
+            style={{ animation: 'shrink 4s linear forwards' }}
+          />
+        </div>
+      </div>
+      <style>{`@keyframes shrink { from { width: 100% } to { width: 0% } }`}</style>
+    </div>
+  );
+};
+
+const API = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:3001`;
+
 const FrontApp = ({
   onGoToBackoffice,
   ordersData,
   setOrdersData,
   frontCustomers,
   setFrontCustomers,
+  customerApi,        // { create, update, remove } → talks to PostgreSQL
   activeOffers = [],
   avisData = [],
   setAvisData,
@@ -59,20 +120,60 @@ const FrontApp = ({
   const [theme] = useState('dark');
   const isLight = false;
 
+  // ── ordersLoaded: true once the DB data has arrived ───
+  // This prevents the confirmation page from showing step=0
+  // (blue "new order" square) before ordersData is populated.
+  const [ordersLoaded, setOrdersLoaded] = useState(false);
+  useEffect(() => {
+    if (!ordersLoaded && ordersData.length > 0) setOrdersLoaded(true);
+  }, [ordersData.length]);         // eslint-disable-line
+
   useEffect(() => {
     document.documentElement.classList.add('dark');
   }, []);
 
   // ── Routing ───────────────────────────────────────────
-  const [page, setPage] = useState('home');
+  // If the customer had an active order when they last left, send them
+  // back to the confirmation page automatically on reload.
+  const [page, setPage] = useState(() => {
+    try {
+      const savedOrderId = localStorage.getItem('asaka_last_order_id');
+      return savedOrderId ? 'confirmation' : 'home';
+    } catch { return 'home'; }
+  });
 
-  // ── Last Order ────────────────────────────────────────
-  const [lastOrderId,            setLastOrderId]            = useState(null);
-  const [lastOrderPoints,        setLastOrderPoints]        = useState(0);
-  const [lastOrderTotal,         setLastOrderTotal]         = useState(0);
-  const [lastOrderMode,          setLastOrderMode]          = useState(null);
-  const [lastOrderCancelWindowEnd, setLastOrderCancelWindowEnd] = useState(null);
-  const [orderBarDismissed,        setOrderBarDismissed]        = useState(false);
+  // ── Last Order — persisted to localStorage so a page refresh
+  //    doesn't lose the active order or its live status tracker ──
+  const [lastOrderId, setLastOrderId] = useState(() => {
+    try { return localStorage.getItem('asaka_last_order_id') || null; } catch { return null; }
+  });
+  const [lastOrderPoints, setLastOrderPoints] = useState(() => {
+    try { return Number(localStorage.getItem('asaka_last_order_points') || 0); } catch { return 0; }
+  });
+  const [lastOrderTotal, setLastOrderTotal] = useState(() => {
+    try { return Number(localStorage.getItem('asaka_last_order_total') || 0); } catch { return 0; }
+  });
+  const [lastOrderMode, setLastOrderMode] = useState(() => {
+    try { return localStorage.getItem('asaka_last_order_mode') || null; } catch { return null; }
+  });
+  const [lastOrderCancelWindowEnd, setLastOrderCancelWindowEnd] = useState(() => {
+    try { return Number(localStorage.getItem('asaka_last_order_cancel_end') || 0) || null; } catch { return null; }
+  });
+  const [orderBarDismissed, setOrderBarDismissed] = useState(false);
+
+  // Keep localStorage in sync whenever these values change
+  useEffect(() => {
+    try {
+      if (lastOrderId)              localStorage.setItem('asaka_last_order_id',          lastOrderId);
+      else                          localStorage.removeItem('asaka_last_order_id');
+      localStorage.setItem('asaka_last_order_points',       String(lastOrderPoints));
+      localStorage.setItem('asaka_last_order_total',        String(lastOrderTotal));
+      if (lastOrderMode)            localStorage.setItem('asaka_last_order_mode',        lastOrderMode);
+      else                          localStorage.removeItem('asaka_last_order_mode');
+      if (lastOrderCancelWindowEnd) localStorage.setItem('asaka_last_order_cancel_end', String(lastOrderCancelWindowEnd));
+      else                          localStorage.removeItem('asaka_last_order_cancel_end');
+    } catch {}
+  }, [lastOrderId, lastOrderPoints, lastOrderTotal, lastOrderMode, lastOrderCancelWindowEnd]);
 
   // ── Lightbox ──────────────────────────────────────────
   const [lightboxImage, setLightboxImage] = useState(null);
@@ -80,7 +181,19 @@ const FrontApp = ({
   // ── Auth ──────────────────────────────────────────────
   const [showAuth,         setShowAuth]         = useState(false);
   const [authMode,         setAuthMode]         = useState('login');
-  const [currentCustomer, setCurrentCustomer]  = useState(null);
+  const [welcomeCustomer,  setWelcomeCustomer]  = useState(null); // signup success screen
+  // Persisted to localStorage so a page refresh keeps the customer logged in
+  const [currentCustomer, setCurrentCustomer]  = useState(() => {
+    try { return JSON.parse(localStorage.getItem('asaka_customer_session') || 'null'); } catch { return null; }
+  });
+
+  // Keep customer session in localStorage in sync whenever it changes
+  useEffect(() => {
+    try {
+      if (currentCustomer) localStorage.setItem('asaka_customer_session', JSON.stringify(currentCustomer));
+      else                  localStorage.removeItem('asaka_customer_session');
+    } catch {}
+  }, [currentCustomer]);
 
   // ── Store reads (no local cart state needed) ──────────
   const cart           = useCartStore(selectCart);
@@ -116,7 +229,7 @@ const FrontApp = ({
         case 'prep':       lastOrderStep = 1; break;
         case 'ready':      lastOrderStep = 2; break;
         case 'delivering': lastOrderStep = 3; break;
-        case 'done':       lastOrderStep = 4; break;
+        case 'done':       lastOrderStep = 5; break;
         default:           lastOrderStep = 0; break;
       }
     }
@@ -127,33 +240,50 @@ const FrontApp = ({
   const openAuth    = (mode = 'login') => { setAuthMode(mode); setShowAuth(true); };
   const handleLogin = (customer) => {
     setCurrentCustomer(customer);
+    try { localStorage.setItem('asaka_customer_session', JSON.stringify(customer)); } catch {}
     // Restore this customer's saved addresses into the cart store
     cartActions.loadAddresses(customer.savedAddresses || []);
     setShowAuth(false);
   };
 
-  const handleSignup = (newCustomer) => {
+  const handleSignup = async (newCustomer) => {
     const customer = {
       ...newCustomer,
-      id:             frontCustomers.length + 1,
       points:         0,
       totalOrders:    0,
       totalSpent:     0,
       orderHistory:   [],
       favorites:      [],
-      coupons:        [generateWelcomeCoupon()],  // 10% welcome coupon
+      coupons:        [generateWelcomeCoupon()],
       joinedDate:     new Date().toLocaleDateString('fr-MA'),
       savedAddresses: newCustomer.savedAddresses || [],
     };
-    setFrontCustomers(prev => [...prev, customer]);
-    setCurrentCustomer(customer);
-    // Pre-load any addresses they entered at signup into the cart store
-    cartActions.loadAddresses(customer.savedAddresses);
-    setShowAuth(false);
+    try {
+      // Save to PostgreSQL — returns the customer with the real DB id
+      const saved = await customerApi.create(customer);
+      setCurrentCustomer(saved);
+      try { localStorage.setItem('asaka_customer_session', JSON.stringify(saved)); } catch {}
+      cartActions.loadAddresses(saved.savedAddresses || []);
+      setShowAuth(false);
+      setWelcomeCustomer(saved); // show welcome screen
+    } catch (err) {
+      if (err.message === 'email_exists') {
+        toast.error('Cet email est déjà utilisé.');
+        return;
+      }
+      // Fallback: use local data if server unreachable
+      setCurrentCustomer(customer);
+      try { localStorage.setItem('asaka_customer_session', JSON.stringify(customer)); } catch {}
+      cartActions.loadAddresses(customer.savedAddresses);
+      setShowAuth(false);
+      setWelcomeCustomer(customer);
+    }
+    // setShowAuth(false) is called above in each branch
   };
 
   const handleLogout = () => {
     setCurrentCustomer(null);
+    try { localStorage.removeItem('asaka_customer_session'); } catch {}
     if (page === 'profile') navigate('home');
   };
 
@@ -171,13 +301,26 @@ const FrontApp = ({
 
   // ── Order placement ───────────────────────────────────
   // Reads cart from store via buildOrderPayload, writes to ordersData (BO bridge)
-  const placeOrder = ({ tip = 0, paymentMethod = 'cash', pointsUsed = 0, extra = {} }) => {
-    const payload  = buildOrderPayload({ currentCustomer, extra: { ...extra, tip }, activeDiscount, pointsUsed, paymentMethod });
-    const orderId  = `#${1100 + ordersData.length}`;
+  // placeOrder is async so it can fetch a unique server-side ID before inserting.
+  const placeOrder = async ({ tip = 0, paymentMethod = 'cash', pointsUsed = 0, extra = {} }) => {
+    const payload = buildOrderPayload({ currentCustomer, extra: { ...extra, tip }, activeDiscount, pointsUsed, paymentMethod });
+
+    // Get a unique sequential order ID from the DB sequence (never duplicates)
+    let orderId;
+    try {
+      const res = await fetch(`${API}/api/orders/next-id`);
+      const data = await res.json();
+      orderId = data.id; // e.g. "#1101"
+    } catch {
+      // Fallback: timestamp-based ID if server is unreachable
+      orderId = `#${Date.now().toString().slice(-5)}`;
+    }
 
     const newOrder = {
       id:            orderId,
-      customer:      payload.customerName,
+      customer:      payload.customerName,  // account holder name (CRM)
+      deliveryName:  payload.deliveryName,  // recipient name (may differ)
+      deliveryPhone: payload.deliveryPhone,
       items:         payload.itemsLabel,
       rawItems:      payload.items,
       payload:       payload, // Provide full financial/customer metadata
@@ -230,9 +373,7 @@ const FrontApp = ({
         ],
       };
       setCurrentCustomer(updated);
-      setFrontCustomers(prev => prev.map(c =>
-        c.id === currentCustomer.id ? updated : c,
-      ));
+      customerApi?.update(updated.id, updated).catch(() => {});
     }
 
     setLastOrderId(orderId);
@@ -245,6 +386,19 @@ const FrontApp = ({
     cartActions.clearCart();
     cartActions.setOrderMode(null);
     return orderId;
+  };
+
+  // ── Clear persisted order (called when order is done/dismissed) ──
+  const clearLastOrder = () => {
+    setLastOrderId(null);
+    setLastOrderPoints(0);
+    setLastOrderTotal(0);
+    setLastOrderMode(null);
+    setLastOrderCancelWindowEnd(null);
+    try {
+      ['asaka_last_order_id','asaka_last_order_points','asaka_last_order_total',
+       'asaka_last_order_mode','asaka_last_order_cancel_end'].forEach(k => localStorage.removeItem(k));
+    } catch {}
   };
 
   // ── Cancel Order (client-side, within 15s window) ─────
@@ -262,9 +416,7 @@ const FrontApp = ({
         ),
       };
       setCurrentCustomer(updated);
-      setFrontCustomers(prev => prev.map(c =>
-        c.id === currentCustomer.id ? updated : c,
-      ));
+      customerApi?.update(updated.id, updated).catch(() => {});
     }
   };
 
@@ -297,9 +449,11 @@ const FrontApp = ({
     lastOrderTotal,
     lastOrderMode,
     cancelOrder,
+    clearLastOrder,
     lastOrderCancelWindowEnd,
     lastOrderStep,
     lastOrderCancelled,
+    ordersLoaded,           // ← NEW: prevents blue-square flash before DB load
     // Legacy cart props — kept for backward compat while pages migrate to store
     cart,
     cartCount,
@@ -313,6 +467,7 @@ const FrontApp = ({
     // Address persistence — lets UnifiedCheckout write new addresses back to the profile
     setFrontCustomers,
     setCurrentCustomer,
+    customerApi,            // ← passed so CustomerProfile can POST reviews to DB
   };
 
   // ── Page renderer ──────────────────────────────────────
@@ -389,7 +544,8 @@ const FrontApp = ({
           lastOrderCancelled={lastOrderCancelled}
           cancelOrder={cancelOrder}
           navigate={navigate}
-          onDismiss={() => setOrderBarDismissed(true)}
+          onDismiss={() => { setOrderBarDismissed(true); clearLastOrder(); }}
+          ordersLoaded={ordersLoaded}
         />
       )}
 
@@ -402,6 +558,15 @@ const FrontApp = ({
           onSignup={handleSignup}
           onClose={() => setShowAuth(false)}
           frontCustomers={frontCustomers}
+        />
+      )}
+
+      {/* ── Welcome screen after signup ─────────────────── */}
+      {welcomeCustomer && (
+        <WelcomeScreen
+          customer={welcomeCustomer}
+          onDismiss={() => setWelcomeCustomer(null)}
+          onOrder={() => { setWelcomeCustomer(null); navigate('menu'); }}
         />
       )}
 
