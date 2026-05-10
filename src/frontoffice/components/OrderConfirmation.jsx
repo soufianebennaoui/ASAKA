@@ -149,9 +149,12 @@ const OrderConfirmation = ({
   lastOrderStep,       // driven by FrontApp — persists across navigation
   lastOrderCancelled,  // driven by FrontApp — true if cancelled from anywhere
   cancelOrder,
+  clearLastOrder,      // wipes persisted order state when done
   currentCustomer,
   openAuth,
   cart,
+  ordersLoaded,        // true once ordersData has been fetched from DB
+  setAvisData,
 }) => {
   const isDelivery = lastOrderMode === 'delivery';
   const STEPS      = isDelivery ? STEPS_DELIVERY : STEPS_TAKEAWAY;
@@ -160,6 +163,39 @@ const OrderConfirmation = ({
 
   const [showReview, setShowReview] = useState(false);
   const [reviewDone, setReviewDone] = useState(false);
+
+  const handleReviewSubmit = async (review) => {
+    setReviewDone(true);
+    try {
+      const API = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:3001`;
+      const res = await fetch(`${API}/api/avis`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: currentCustomer?.name || 'Client Web',
+          stars: review.stars,
+          text: review.comment || '',
+          date: new Date().toLocaleDateString('fr-MA'),
+          published: false,
+          images: [],
+        }),
+      });
+      if (res.ok) {
+        const newAvis = await res.json();
+        setAvisData?.(prev => [{
+          id: newAvis.id || Date.now(),
+          name: currentCustomer?.name || 'Client Web',
+          stars: review.stars,
+          text: review.comment || '',
+          date: new Date().toLocaleDateString('fr-MA'),
+          published: false,
+          images: [],
+        }, ...prev]);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   // ── Cancel window state (local UI only) ─────────────────
   const [cancelled, setCancelled]   = useState(lastOrderCancelled || false);
@@ -200,11 +236,46 @@ const OrderConfirmation = ({
     return () => clearTimeout(t);
   }, [cancelWindowOpen, cancelled]); // re-fires the moment cancelWindowOpen flips to false
 
+  // When the order reaches "done" (step 5), we remove it from localStorage
+  // so the NEXT visit to the site doesn't bounce the customer back here.
+  // We DO NOT call clearLastOrder() because we want to keep the React state intact
+  // so the customer can take their time to write a review without the page resetting.
+  useEffect(() => {
+    if (lastOrderStep < 5) return;
+    try {
+      localStorage.removeItem('asaka_last_order_id');
+      localStorage.removeItem('asaka_last_order_points');
+      localStorage.removeItem('asaka_last_order_total');
+      localStorage.removeItem('asaka_last_order_mode');
+      localStorage.removeItem('asaka_last_order_cancel_end');
+    } catch {}
+  }, [lastOrderStep]);
+
   // Step advancement is now owned by FrontApp — no local driver needed here
 
   const estimatedTime = isDelivery
     ? `${ORDER_CONFIG?.estimatedDelivery ?? 45} min`
     : `${ORDER_CONFIG?.estimatedTakeaway ?? 20} min`;
+
+  // ── Loading guard: DB not fetched yet — don't flash step 0 ────
+  // (ordersLoaded becomes true once useRealtimeOrders populates ordersData)
+  if (!ordersLoaded && lastOrderId) {
+    return (
+      <div className="min-h-screen bg-asaka-900 pt-20 pb-24 flex items-center justify-center">
+        <div className="text-center px-4">
+          <div className="relative w-14 h-14 mx-auto mb-4">
+            <svg className="animate-spin w-14 h-14 text-asaka-600" viewBox="0 0 24 24" fill="none">
+              <circle className="opacity-20" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3"/>
+              <path className="opacity-60" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+            </svg>
+            <span className="absolute inset-0 flex items-center justify-center text-2xl">🍣</span>
+          </div>
+          <p className="text-asaka-300 font-bold text-sm">Chargement du statut…</p>
+          <p className="text-asaka-600 text-xs mt-1">Connexion au restaurant en cours</p>
+        </div>
+      </div>
+    );
+  }
 
   // ── Cancelled screen ────────────────────────────────────
   if (cancelled) {
@@ -223,11 +294,11 @@ const OrderConfirmation = ({
             Votre commande a bien été annulée. Vous n'avez pas été débité.
           </p>
           <div className="space-y-3">
-            <button onClick={() => navigate('menu')}
+            <button onClick={() => { clearLastOrder?.(); navigate('menu'); }}
               className="btn-primary w-full py-3.5 text-sm">
               Commander à nouveau 🍣
             </button>
-            <button onClick={() => navigate('home')}
+            <button onClick={() => { clearLastOrder?.(); navigate('home'); }}
               className="btn-ghost w-full py-3 text-sm text-asaka-muted hover:text-white">
               Retour à l'accueil
             </button>
@@ -379,7 +450,7 @@ const OrderConfirmation = ({
           <div className="mb-4 animate-fade-up">
             <ReviewForm
               orderId={lastOrderId}
-              onSubmit={() => setReviewDone(true)}
+              onSubmit={handleReviewSubmit}
             />
           </div>
         )}
@@ -392,11 +463,11 @@ const OrderConfirmation = ({
               💎 Créer un compte pour gagner des points
             </button>
           )}
-          <button onClick={() => navigate('menu')}
+          <button onClick={() => { clearLastOrder?.(); navigate('menu'); }}
             className="btn-primary w-full py-3.5 text-sm">
             Commander à nouveau 🍣
           </button>
-          <button onClick={() => navigate('home')}
+          <button onClick={() => { clearLastOrder?.(); navigate('home'); }}
             className="btn-ghost w-full py-3 text-sm text-asaka-muted hover:text-white">
             Retour à l'accueil
           </button>
