@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Search, Moon, Sun, Bell, ShoppingBag, Menu } from 'lucide-react';
+import { Search, Moon, Sun, Bell, Menu, LogOut } from 'lucide-react';
 
-const Header = ({ theme, toggleTheme, unseenCount = 0, onOpenOrders, onToggleSidebar }) => {
+const Header = ({ theme, toggleTheme, unseenCount = 0, onOpenOrders, onToggleSidebar, currentStaff, onLogout }) => {
   const [showBell, setShowBell] = useState(false);
 
   return (
@@ -49,6 +49,23 @@ const Header = ({ theme, toggleTheme, unseenCount = 0, onOpenOrders, onToggleSid
             ? <Sun  size={18} className="text-asaka-300" />
             : <Moon size={18} className="text-asaka-300" />}
         </button>
+
+        {/* Staff name + logout */}
+        {currentStaff && (
+          <div className="flex items-center gap-2 pl-2 border-l border-asaka-700/50">
+            <span className="hidden md:block text-xs text-asaka-muted font-medium">
+              {currentStaff.name}
+              <span className="ml-1 text-asaka-600">({currentStaff.role})</span>
+            </span>
+            <button
+              onClick={onLogout}
+              title="Se déconnecter"
+              className="flex items-center justify-center p-2 bg-asaka-800/60 border border-asaka-700/40 text-asaka-muted rounded-xl hover:bg-red-900/40 hover:text-red-400 hover:border-red-800/40 transition-colors w-10 h-10"
+            >
+              <LogOut size={16} />
+            </button>
+          </div>
+        )}
       </div>
     </header>
   );
