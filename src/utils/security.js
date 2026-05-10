@@ -54,9 +54,9 @@ export const validators = {
   },
 
   /**
-   * Full name: 2+ chars, letters + spaces + hyphens only
+   * Full name: 2+ chars, any characters (letters, digits, Arabic, spaces, hyphens)
    */
-  name: (v) => v && v.trim().length >= 2 && /^[\p{L}\s\-'.]+$/u.test(v.trim()),
+  name: (v) => v != null && v.trim().length >= 2 && v.trim().length <= 80,
 
   /**
    * Email (basic, not required in most forms)
@@ -153,7 +153,7 @@ export const rateLimiter = {
 export const takeawaySchema = {
   name: [
     { validate: validators.required, message: 'Le nom est requis — veuillez saisir votre prénom et nom' },
-    { validate: validators.name,     message: 'Nom invalide — minimum 2 caractères, lettres uniquement' },
+    { validate: validators.name,     message: 'Nom invalide — minimum 2 caractères requis' },
   ],
   phone: [
     { validate: validators.required, message: 'Le numéro de téléphone est requis' },
@@ -170,7 +170,7 @@ export const takeawaySchema = {
 export const deliverySchema = {
   name: [
     { validate: validators.required, message: 'Le nom est requis — veuillez saisir votre prénom et nom' },
-    { validate: validators.name,     message: 'Nom invalide — minimum 2 caractères, lettres uniquement' },
+    { validate: validators.name,     message: 'Nom invalide — minimum 2 caractères requis' },
   ],
   phone: [
     { validate: validators.required, message: 'Le numéro de téléphone est requis' },
